@@ -3,217 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Learning Center</title>
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f4f8;
-            color: #334155;
-            text-align: center;
+    <title>Clas-AI - Korean Learning App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'app-purple': '#667eea',
+                        'app-purple-dark': '#764ba2',
+                    }
+                }
+            }
         }
-
-        .main-container {
-            padding: 2.5rem;
-            background-color: #ffffff;
-            border-radius: 1rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            max-width: 90%;
-            width: 400px;
+    </script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
         
-        .logo {
-            width: 100px;
-            height: 100px;
-            margin-bottom: 1.5rem;
-            border-radius: 0.5rem;
-        }
-
-        h1 {
-            font-size: 2.25rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-
-        p {
-            font-size: 1rem;
-            margin-bottom: 2rem;
-            color: #64748b;
-        }
-
-        .button-group {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 0.75rem 1.5rem;
-            font-size: 1rem;
-            font-weight: 600;
-            text-decoration: none;
-            color: #ffffff;
-            background-color: #3b82f6;
-            border: none;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            transition: all 0.2s ease-in-out;
-            width: 100%;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
-
-        .btn:hover {
-            background-color: #2563eb;
-            transform: translateY(-2px);
-        }
-
-        .dropdown-container {
-            position: relative;
-            width: 100%;
-        }
-
-        .dropdown-btn {
-            background-color: #64748b;
-        }
-
-        .dropdown-btn:hover {
-            background-color: #4b5563;
-        }
-
-        .dropdown-menu {
+        .gradient-border::before {
+            content: '';
             position: absolute;
-            top: 100%;
+            top: 0;
             left: 0;
             right: 0;
-            z-index: 10;
-            background-color: #ffffff;
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            padding: 0.5rem 0;
-            margin-top: 0.5rem;
-            display: none; /* Initially hidden */
-            flex-direction: column;
-        }
-
-        .dropdown-menu a {
-            padding: 0.75rem 1.5rem;
-            text-align: left;
-            text-decoration: none;
-            color: #334155;
-            transition: background-color 0.2s ease-in-out;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
         }
         
-        .dropdown-menu a:hover {
-            background-color: #f1f5f9;
+        .logo-gradient {
+            background: linear-gradient(135deg, #667eea, #764ba2);
         }
-
-        /* Modal styling */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 100;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.4);
-            justify-content: center;
-            align-items: center;
+        
+        .btn-gradient {
+            background: linear-gradient(135deg, #667eea, #764ba2);
         }
-        .modal-content {
-            background-color: #fefefe;
-            padding: 2rem;
-            border-radius: 0.75rem;
-            max-width: 400px;
-            text-align: center;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+        
+        .welcome-gradient {
+            background: linear-gradient(135deg, #f8f9ff, #e8ecff);
         }
-        .modal-close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .modal-close:hover,
-        .modal-close:focus {
-            color: #000;
+        
+        .battery-icon::after {
+            content: '';
+            position: absolute;
+            right: -3px;
+            top: 2px;
+            width: 2px;
+            height: 6px;
+            background: #666;
+            border-radius: 0 1px 1px 0;
         }
     </style>
 </head>
-<body>
+<body class="gradient-bg min-h-screen flex items-center justify-center p-5">
+    <div class="main-container bg-white rounded-3xl shadow-2xl w-full max-w-sm px-6 py-8 text-center relative overflow-hidden gradient-border">
+        <!-- Mobile Status Bar -->
+        <!-- <div class="flex justify-between items-center py-2 mb-4 text-xs text-gray-600">
+            <span>9:41 AM</span>
+            <div class="flex items-center gap-1">
+                <span>100%</span>
+                <div class="w-5 h-2.5 border border-gray-600 rounded-sm relative battery-icon">
+                    <div class="w-4/5 h-full bg-green-500 rounded-sm"></div>
+                </div>
+            </div>
+        </div> -->
 
-    <div class="main-container">
         <!-- Logo Image -->
-        <img src="class AI.jpg" alt="Clas-AI Logo" class="logo">
+        <img src="class AI.jpg" alt="Clas-AI Logo" class="w-20 h-20 rounded-2xl mx-auto mb-6 object-cover shadow-lg" onerror="this.style.display='none'; document.querySelector('.logo-fallback').style.display='flex';">
+        <div class="logo-fallback w-20 h-20 rounded-2xl mx-auto mb-6 logo-gradient hidden items-center justify-center text-3xl text-white font-bold shadow-lg">AI</div>
         
-        <h3>Welcome to the Clas-AI Language Learning App</h3>
-        <p>Start your Korean language journey with us!</p>
+        <h3 class="text-2xl font-bold text-gray-900 mb-2 leading-tight">Welcome to the Clas-AI Language Learning App</h3>
+        <p class="text-base text-gray-600 mb-8 leading-relaxed">Start your Korean language journey with us!</p>
 
-        <div class="button-group">
+        <div class="flex flex-col gap-4">
             
-            <a href="learnkorean.html" class="btn">Start Learning Korean</a>
+            <a href="learnkorean.html" class="btn-gradient text-white border-none rounded-2xl px-6 py-4 text-base font-semibold no-underline block transition-all duration-300 shadow-lg hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0">Start Learning Korean</a>
             
-            <div class="dropdown-container">
-                <button id="dropdown-toggle" class="btn dropdown-btn">
+            <div class="relative">
+                <button id="dropdown-toggle" class="w-full bg-white text-app-purple border-2 border-app-purple rounded-2xl px-6 py-4 text-base font-semibold transition-all duration-300 shadow-md hover:bg-blue-50">
                     Select Vocabulary Learning style
                 </button>
-                <div id="dropdown-menu" class="dropdown-menu">
-                    <a href="korean2.html">Lesson 1: Korean Vocabulary</a>
-                    <a href="korean1.html">Lesson 2: Korean Vocabulary AI</a>
+                <div id="dropdown-menu" class="absolute top-full left-0 right-0 bg-white rounded-xl shadow-2xl opacity-0 invisible -translate-y-2.5 transition-all duration-300 z-10 mt-2 overflow-hidden">
+                    <a href="korean2.html" class="block px-5 py-4 text-gray-700 no-underline text-sm transition-colors duration-200 border-b border-gray-100 hover:bg-blue-50 hover:text-app-purple">Lesson 1: Korean Vocabulary</a>
+                    <a href="korean1.html" class="block px-5 py-4 text-gray-700 no-underline text-sm transition-colors duration-200 hover:bg-blue-50 hover:text-app-purple">Lesson 2: Korean Vocabulary AI</a>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Simple Message Box -->
-    <div id="message-modal" class="modal">
-        <div class="modal-content">
-            <span class="modal-close" onclick="closeModal()">&times;</span>
-            <p id="modal-text"></p>
+        <!-- Welcome Message Box -->
+        <div class="welcome-gradient rounded-2xl p-5 mt-6 border-l-4 border-app-purple">
+            <h4 class="text-app-purple text-lg mb-2 font-semibold">Welcome User!</h4>
+            <p class="text-gray-600 text-sm leading-relaxed mb-0">Ready to master Korean? Choose your learning path above and start your journey to fluency today!</p>
         </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const dropdownBtn = document.getElementById('dropdown-toggle');
-            const dropdownMenu = document.getElementById('dropdown-menu');
-            
-            dropdownBtn.addEventListener('click', (event) => {
-                event.stopPropagation();
-                const isVisible = dropdownMenu.style.display === 'flex';
-                dropdownMenu.style.display = isVisible ? 'none' : 'flex';
-            });
+        // Dropdown functionality
+        const dropdownToggle = document.getElementById('dropdown-toggle');
+        const dropdownMenu = document.getElementById('dropdown-menu');
 
-            // Close the dropdown if the user clicks outside of it
-            window.addEventListener('click', (event) => {
-                if (dropdownMenu.style.display === 'flex' && !dropdownBtn.contains(event.target)) {
-                    dropdownMenu.style.display = 'none';
-                }
+        dropdownToggle.addEventListener('click', function() {
+            if (dropdownMenu.classList.contains('opacity-0')) {
+                // Show dropdown
+                dropdownMenu.classList.remove('opacity-0', 'invisible', '-translate-y-2.5');
+                dropdownMenu.classList.add('opacity-100', 'visible', 'translate-y-0');
+            } else {
+                // Hide dropdown
+                dropdownMenu.classList.add('opacity-0', 'invisible', '-translate-y-2.5');
+                dropdownMenu.classList.remove('opacity-100', 'visible', 'translate-y-0');
+            }
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!dropdownToggle.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                dropdownMenu.classList.add('opacity-0', 'invisible', '-translate-y-2.5');
+                dropdownMenu.classList.remove('opacity-100', 'visible', 'translate-y-0');
+            }
+        });
+
+        // Add touch feedback for mobile
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('touchstart', function() {
+                this.style.transform = 'scale(0.98)';
+            });
+            
+            btn.addEventListener('touchend', function() {
+                this.style.transform = '';
             });
         });
-        
-        // Modal functions
-        function showModal(message) {
-            const modal = document.getElementById('message-modal');
-            const modalText = document.getElementById('modal-text');
-            modalText.textContent = message;
-            modal.style.display = 'flex';
-        }
-
-        function closeModal() {
-            const modal = document.getElementById('message-modal');
-            modal.style.display = 'none';
-        }
     </script>
-
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97caa299247cfed0',t:'MTc1NzQ2MjMyMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
-
