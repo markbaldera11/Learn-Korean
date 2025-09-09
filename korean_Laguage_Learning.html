@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Korean Language Lessons</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /*@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');*/
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a202c;
+            color: #e2e8f0;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .header {
+            padding: 1.5rem;
+            background-color: #2d3748;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            z-index: 10;
+        }
+        .nav-container {
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .nav-container::-webkit-scrollbar {
+            display: none;
+        }
+        .nav-button {
+            display: inline-block;
+            padding: 0.75rem 1.25rem;
+            margin: 0 0.5rem;
+            background-color: #4a5568;
+            color: #e2e8f0;
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.2s;
+            font-weight: 500;
+        }
+        .nav-button:hover {
+            background-color: #6a768d;
+            transform: scale(1.05);
+        }
+        .nav-button.active {
+            background-color: #63b3ed;
+            color: #1a202c;
+        }
+        .content {
+            flex-grow: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+        .lesson-card {
+            background-color: #2d3748;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .speak-button, .generate-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1rem;
+            margin-top: 0.5rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+        .speak-button {
+            background-color: #48bb78;
+            color: #1a202c;
+        }
+        .speak-button:hover {
+            background-color: #68d391;
+        }
+        .generate-button {
+            background-color: #63b3ed;
+            color: #1a202c;
+        }
+        .generate-button:hover {
+            background-color: #90cdf4;
+        }
+        .loading-spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #e2e8f0;
+            border-radius: 50%;
+            width: 1.5rem;
+            height: 1.5rem;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .message-box {
+            background-color: #c53030;
+            color: #fed7d7;
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200">
+    <div class="container">
+        <div class="header">
+            <a href="index.html" class="px-4 py-2 bg-gray-700 text-white rounded-lg inline-block">
+                ⬅ return
+            </a>
+
+            <h1 class="text-3xl font-bold text-center mb-4">Korean Language Lessons</h1>
+            <div class="nav-container text-center">
+                <button class="nav-button active" data-lesson="hangeul">1. Hangeul</button>
+                <button class="nav-button" data-lesson="ida">2. The "이다" Verb</button>
+                <button class="nav-button" data-lesson="numbers">3. Korean Numbers</button>
+                <button class="nav-button" data-lesson="time">4. Telling Time</button>
+                <button class="nav-button" data-lesson="date">5. Telling Date</button>
+                <button class="nav-button" data-lesson="counters">6. Counters</button>
+                <button class="nav-button" data-lesson="verbs-adj">7-12. Verb & Adj. Usage</button>
+                <button class="nav-button" data-lesson="location-direction">13-14. Location & Direction</button>
+                <button class="nav-button" data-lesson="sentence">15. Sentence Structure</button>
+            </div>
+        </div>
+
+        <div class="content">
+            <div id="lesson-hangeul" class="lesson-card">
+                <h2 class="text-2xl font-semibold mb-4">Lesson 1: Korean Alphabet - Hangeul (한글)</h2>
+                <div class="mt-4 p-4 bg-gray-700 rounded-lg">
+                    <p class="font-bold">Lesson Highlight: The Korean alphabet, Hangeul, is a scientific writing system that is easy to learn.</p>
+                    <button class="speak-button mt-2" data-text="한글은 배우기 쉬운 과학적인 문자 체계입니다.">Read Aloud</button>
+                </div>
+                <h3 class="text-xl font-medium mt-6 mb-2">10 Basic Vowels</h3>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-4">
+                    <div class="p-3 bg-gray-700 rounded-lg border border-gray-600">
+                        <p class="text-3xl font-bold mb-1">ㅏ</p>
+                        <p class="text-sm">a (ah)</p>
+                        <button class="speak-button" data-text="아">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg border border-gray-600">
+                        <p class="text-3xl font-bold mb-1">ㅑ</p>
+                        <p class="text-sm">ya</p>
+                        <button class="speak-button" data-text="야">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg border border-gray-600">
+                        <p class="text-3xl font-bold mb-1">ㅓ</p>
+                        <p class="text-sm">eo (uh)</p>
+                        <button class="speak-button" data-text="어">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg border border-gray-600">
+                        <p class="text-3xl font-bold mb-1">ㅕ</p>
+                        <p class="text-sm">yeo</p>
+                        <button class="speak-button" data-text="여">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg border border-gray-600">
+                        <p class="text-3xl font-bold mb-1">ㅗ</p>
+                        <p class="text-sm">o (oh)</p>
+                        <button class="speak-button" data-text="오">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg border border-gray-600">
+                        <p class="text-3xl font-bold mb-1">ㅛ</p>
+                        <p class="text-sm">yo</p>
+                        <button class="speak-button" data-text="요">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg border border-gray-600">
+                        <p class="text-3xl font-bold mb-1">ㅜ</p>
+                        <p class="text-sm">u (oo)</p>
+                        <button class="speak-button" data-text="우">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg border border-gray-600">
+                        <p class="text-3xl font-bold mb-1">ㅠ</p>
+                        <p class="text-sm">yu</p>
+                        <button class="speak-button" data-text="유">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg border border-gray-600">
+                        <p class="text-3xl font-bold mb-1">ㅡ</p>
+                        <p class="text-sm">eu (u)</p>
+                        <button class="speak-button" data-text="으">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg border border-gray-600">
+                        <p class="text-3xl font-bold mb-1">ㅣ</p>
+                        <p class="text-sm">i (ee)</p>
+                        <button class="speak-button" data-text="이">Speak</button>
+                    </div>
+                </div>
+
+                <h3 class="text-xl font-medium mt-6 mb-2">11 Combined Vowels</h3>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-4">
+                    <div class="p-3 bg-gray-700 rounded-lg border border-gray-600">
+                        <p class="text-3xl font-bold mb-1">ㅐ</p>
+                        <p class="text-sm">ae (eh)</p>
+                        <button class="speak-button" data-text="애">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg border border-gray-600">
+                        <p class="text-3xl font-bold mb-1">ㅒ</p>
+                        <p class="text-sm">yae</p>
+                        <button class="speak-button" data-text="얘">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg border border-gray-600">
+                        <p class="text-3xl font-bold mb-1">ㅔ</p>
+                        <p class="text-sm">e (eh)</p>
+                        <button class="speak-button" data-text="에">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg border border-gray-600">
+                        <p class="text-3xl font-bold mb-1">ㅖ</p>
+                        <p class="text-sm">ye</p>
+                        <button class="speak-button" data-text="예">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg border border-gray-600">
+                        <p class="text-3xl font-bold mb-1">ㅘ</p>
+                        <p class="text-sm">wa</p>
+                        <button class="speak-button" data-text="와">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg border border-gray-600">
+                        <p class="text-3xl font-bold mb-1">ㅙ</p>
+                        <p class="text-sm">wae</p>
+                        <button class="speak-button" data-text="왜">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg border border-gray-600">
+                        <p class="text-3xl font-bold mb-1">ㅚ</p>
+                        <p class="text-sm">oe (we)</p>
+                        <button class="speak-button" data-text="외">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg border border-gray-600">
+                        <p class="text-3xl font-bold mb-1">ㅝ</p>
+                        <p class="text-sm">wo</p>
+                        <button class="speak-button" data-text="워">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg border border-gray-600">
+                        <p class="text-3xl font-bold mb-1">ㅞ</p>
+                        <p class="text-sm">we</p>
+                        <button class="speak-button" data-text="웨">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg border border-gray-600">
+                        <p class="text-3xl font-bold mb-1">ㅟ</p>
+                        <p class="text-sm">wi</p>
+                        <button class="speak-button" data-text="위">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg border border-gray-600">
+                        <p class="text-3xl font-bold mb-1">ㅢ</p>
+                        <p class="text-sm">ui</p>
+                        <button class="speak-button" data-text="의">Speak</button>
+                    </div>
+                </div>
+
+                <h3 class="text-xl font-medium mt-6 mb-2">14 Basic Consonants</h3>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-4">
+                    <div class="p-3 bg-gray-700 rounded-lg border border-gray-600">
+                        <p class="text-3xl font-bold mb-1">ㄱ</p>
+                        <p class="text-sm">g/k</p>
+                        <button class="speak-button" data-text="가">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg border border-gray-600">
+                        <p class="text-3xl font-bold mb-1">ㄴ</p>
+                        <p class="text-sm">n</p>
+                        <button class="speak-button" data-text="나">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg border border-gray-600">
+                        <p class="text-3xl font-bold mb-1">ㄷ</p>
+                        <p class="text-sm">d/t</p>
+                        <button class="speak-button" data-text="다">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg border border-gray-600">
+                        <p class="text-3xl font-bold mb-1">ㄹ</p>
+                        <p class="text-sm">r/l</p>
+                        <button class="speak-button" data-text="라">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg border border-gray-600">
+                        <p class="text-3xl font-bold mb-1">ㅁ</p>
+                        <p class="text-sm">m</p>
+                        <button class="speak-button" data-text="마">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg border border-gray-600">
+                        <p class="text-3xl font-bold mb-1">ㅂ</p>
+                        <p class="text-sm">b/p</p>
+                        <button class="speak-button" data-text="바">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg border border-gray-600">
+                        <p class="text-3xl font-bold mb-1">ㅅ</p>
+                        <p class="text-sm">s</p>
+                        <button class="speak-button" data-text="사">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg border border-gray-600">
+                        <p class="text-3xl font-bold mb-1">ㅇ</p>
+                        <p class="text-sm">ng</p>
+                        <button class="speak-button" data-text="아">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg border border-gray-600">
+                        <p class="text-3xl font-bold mb-1">ㅈ</p>
+                        <p class="text-sm">j</p>
+                        <button class="speak-button" data-text="자">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg border border-gray-600">
+                        <p class="text-3xl font-bold mb-1">ㅊ</p>
+                        <p class="text-sm">ch</p>
+                        <button class="speak-button" data-text="차">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg border border-gray-600">
+                        <p class="text-3xl font-bold mb-1">ㅋ</p>
+                        <p class="text-sm">k</p>
+                        <button class="speak-button" data-text="카">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg border border-gray-600">
+                        <p class="text-3xl font-bold mb-1">ㅌ</p>
+                        <p class="text-sm">t</p>
+                        <button class="speak-button" data-text="타">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg border border-gray-600">
+                        <p class="text-3xl font-bold mb-1">ㅍ</p>
+                        <p class="text-sm">p</p>
+                        <button class="speak-button" data-text="파">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg border border-gray-600">
+                        <p class="text-3xl font-bold mb-1">ㅎ</p>
+                        <p class="text-sm">h</p>
+                        <button class="speak-button" data-text="하">Speak</button>
+                    </div>
+                </div>
+
+                <h3 class="text-xl font-medium mt-6 mb-2">5 Double Consonants</h3>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-4">
+                    <div class="p-3 bg-gray-700 rounded-lg border border-gray-600">
+                        <p class="text-3xl font-bold mb-1">ㄲ</p>
+                        <p class="text-sm">kk</p>
+                        <button class="speak-button" data-text="까">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg border border-gray-600">
+                        <p class="text-3xl font-bold mb-1">ㄸ</p>
+                        <p class="text-sm">tt</p>
+                        <button class="speak-button" data-text="따">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg border border-gray-600">
+                        <p class="text-3xl font-bold mb-1">ㅃ</p>
+                        <p class="text-sm">pp</p>
+                        <button class="speak-button" data-text="빠">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg border border-gray-600">
+                        <p class="text-3xl font-bold mb-1">ㅆ</p>
+                        <p class="text-sm">ss</p>
+                        <button class="speak-button" data-text="싸">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg border border-gray-600">
+                        <p class="text-3xl font-bold mb-1">ㅉ</p>
+                        <p class="text-sm">jj</p>
+                        <button class="speak-button" data-text="짜">Speak</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="lesson-ida" class="lesson-card hidden">
+                <h2 class="text-2xl font-semibold mb-4">Lesson 2: The "이다" (i-da) Verb</h2>
+                <div class="mt-4 p-4 bg-gray-700 rounded-lg">
+                    <p class="font-bold">Lesson Highlight: The verb 이다 is a fundamental verb meaning 'to be' that attaches to a noun.</p>
+                    <button class="speak-button mt-2" data-text="동사 이다는 명사에 붙는 '...이다' 라는 뜻의 기본 동사입니다.">Read Aloud</button>
+                </div>
+                <p>The verb "이다" means "to be" and is one of the most fundamental verbs in Korean. It is used to state what something or someone is. Unlike English, "이다" is attached directly to a noun.</p>
+                <div class="mt-4 p-4 bg-gray-700 rounded-lg">
+                    <p class="font-bold">Formal (습니다/입니다)</p>
+                    <p>It's formal and polite, often used in presentations, news reports, and military. The stem of the verb "이다" is "이." You add "입니다" to the noun regardless of whether the noun ends with a consonant or a vowel.</p>
+                    <p class="mt-2">Example: <span class="inline-flex items-center">책 (chaek) - book<button class="speak-button ml-2" data-text="책">Speak</button></span></p>
+                    <p class="ml-4"><span class="inline-flex items-center">책 + 입니다 = 책입니다 (chaegimnida) - It is a book.<button class="speak-button ml-2" data-text="책입니다">Speak</button></span></p>
+                    <p class="mt-2">Example: <span class="inline-flex items-center">선생님 (seonsaengnim) - teacher<button class="speak-button ml-2" data-text="선생님">Speak</button></span></p>
+                    <p class="ml-4"><span class="inline-flex items-center">선생님 + 입니다 = 선생님입니다 (seonsaengnimimnida) - He/she is a teacher.<button class="speak-button ml-2" data-text="선생님입니다">Speak</button></span></p>
+                </div>
+                <div class="mt-4 p-4 bg-gray-700 rounded-lg">
+                    <p class="font-bold">Informal Polite (아요/어요)</p>
+                    <p>This is the most common form in daily conversation. The form changes based on the final syllable of the noun.</p>
+                    <ul class="list-disc list-inside mt-2">
+                        <li><span class="inline-flex items-center"><strong>이에요 (ieyo):</strong> Used when the noun ends with a consonant.<button class="speak-button ml-2" data-text="이에요">Speak</button></span></li>
+                        <li><span class="inline-flex items-center"><strong>예요 (yeyo):</strong> Used when the noun ends with a vowel.<button class="speak-button ml-2" data-text="예요">Speak</button></span></li>
+                    </ul>
+                    <p class="mt-2">Example: <span class="inline-flex items-center">학생 (haksaeng) - student<button class="speak-button ml-2" data-text="학생">Speak</button></span></p>
+                    <p class="ml-4"><span class="inline-flex items-center">학생 + 이에요 = 학생이에요 (haksaeng-ieyo) - I am a student.<button class="speak-button ml-2" data-text="학생이에요">Speak</button></span></p>
+                    <p class="mt-2">Example: <span class="inline-flex items-center">의사 (uisa) - doctor<button class="speak-button ml-2" data-text="의사">Speak</button></span></p>
+                    <p class="ml-4"><span class="inline-flex items-center">의사 + 예요 = 의사예요 (uisayeyo) - He/she is a doctor.<button class="speak-button ml-2" data-text="의사예요">Speak</button></span></p>
+                </div>
+                <div class="mt-4 p-4 bg-gray-700 rounded-lg">
+                    <p class="font-bold">Informal Casual (이다)</p>
+                    <p>This is the base form and is used with close friends or people younger than you. The noun is directly followed by "이야" or "야."</p>
+                    <ul class="list-disc list-inside mt-2">
+                        <li><span class="inline-flex items-center"><strong>이야 (iya):</strong> Used when the noun ends with a consonant.<button class="speak-button ml-2" data-text="이야">Speak</button></span></li>
+                        <li><span class="inline-flex items-center"><strong>야 (ya):</strong> Used when the noun ends with a vowel.<button class="speak-button ml-2" data-text="야">Speak</button></span></li>
+                    </ul>
+                    <p class="mt-2">Example: <span class="inline-flex items-center">사람 (saram) - person<button class="speak-button ml-2" data-text="사람">Speak</button></span></p>
+                    <p class="ml-4"><span class="inline-flex items-center">사람 + 이야 = 사람이야 (saram-iya) - He is a person.<button class="speak-button ml-2" data-text="사람이야">Speak</button></span></p>
+                    <p class="mt-2">Example: <span class="inline-flex items-center">친구 (chingu) - friend<button class="speak-button ml-2" data-text="친구">Speak</button></span></p>
+                    <p class="ml-4"><span class="inline-flex items-center">친구 + 야 = 친구야 (chinggu-ya) - You are a friend.<button class="speak-button ml-2" data-text="친구야">Speak</button></span></p>
+                </div>
+                <div id="ida-example" class="mt-6">
+                    <h3 class="text-xl font-medium">Generate an example sentence:</h3>
+                    <p class="mt-2 text-gray-400">Click the button to get a random sentence using the informal polite "이다" verb forms (이에요/예요).</p>
+                    <button id="generate-ida" class="generate-button mt-2">Generate Example</button>
+                    <div id="ida-result" class="mt-4 p-4 bg-gray-700 rounded-lg hidden">
+                        <p id="ida-text"></p>
+                        <p class="text-sm mt-2"><button id="speak-ida" class="speak-button">Speak</button></p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="lesson-numbers" class="lesson-card hidden">
+                <h2 class="text-2xl font-semibold mb-4">Lesson 3: Korean Numbers</h2>
+                <div class="mt-4 p-4 bg-gray-700 rounded-lg">
+                    <p class="font-bold">Lesson Highlight: Korean has two number systems: Sino-Korean and Native Korean, used for different contexts.</p>
+                    <button class="speak-button mt-2" data-text="한국어에는 두 가지 숫자 체계가 있으며, 상황에 따라 다르게 사용됩니다.">Read Aloud</button>
+                </div>
+                <p>Korean uses two different numbering systems: Sino-Korean and Pure/Native Korean. It's crucial to know which one to use.</p>
+                
+                <h3 class="text-xl font-medium mt-6 mb-2">Sino-Korean Numbers (from Chinese)</h3>
+                <p>Used for dates, money, phone numbers, addresses, and minutes/seconds in time.</p>
+                <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-4 mt-4">
+                    <div class="p-3 bg-gray-700 rounded-lg">
+                        <p class="text-3xl font-bold mb-1">일 (il)</p>
+                        <p class="text-sm">1</p>
+                        <button class="speak-button" data-text="일">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg">
+                        <p class="text-3xl font-bold mb-1">이 (i)</p>
+                        <p class="text-sm">2</p>
+                        <button class="speak-button" data-text="이">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg">
+                        <p class="text-3xl font-bold mb-1">삼 (sam)</p>
+                        <p class="text-sm">3</p>
+                        <button class="speak-button" data-text="삼">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg">
+                        <p class="text-3xl font-bold mb-1">사 (sa)</p>
+                        <p class="text-sm">4</p>
+                        <button class="speak-button" data-text="사">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg">
+                        <p class="text-3xl font-bold mb-1">오 (o)</p>
+                        <p class="text-sm">5</p>
+                        <button class="speak-button" data-text="오">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg">
+                        <p class="text-3xl font-bold mb-1">육 (yuk)</p>
+                        <p class="text-sm">6</p>
+                        <button class="speak-button" data-text="육">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg">
+                        <p class="text-3xl font-bold mb-1">칠 (chil)</p>
+                        <p class="text-sm">7</p>
+                        <button class="speak-button" data-text="칠">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg">
+                        <p class="text-3xl font-bold mb-1">팔 (pal)</p>
+                        <p class="text-sm">8</p>
+                        <button class="speak-button" data-text="팔">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg">
+                        <p class="text-3xl font-bold mb-1">구 (gu)</p>
+                        <p class="text-sm">9</p>
+                        <button class="speak-button" data-text="구">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg">
+                        <p class="text-3xl font-bold mb-1">십 (sip)</p>
+                        <p class="text-sm">10</p>
+                        <button class="speak-button" data-text="십">Speak</button>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <p class="mt-2"><strong>Tens:</strong> <span class="inline-flex items-center">이십 (20) <button class="speak-button ml-2" data-text="이십">Speak</button></span>, <span class="inline-flex items-center">삼십 (30) <button class="speak-button ml-2" data-text="삼십">Speak</button></span>, <span class="inline-flex items-center">사십 (40) <button class="speak-button ml-2" data-text="사십">Speak</button></span>, <span class="inline-flex items-center">오십 (50) <button class="speak-button ml-2" data-text="오십">Speak</button></span>, <span class="inline-flex items-center">육십 (60) <button class="speak-button ml-2" data-text="육십">Speak</button></span>, <span class="inline-flex items-center">칠십 (70) <button class="speak-button ml-2" data-text="칠십">Speak</button></span>, <span class="inline-flex items-center">팔십 (80) <button class="speak-button ml-2" data-text="팔십">Speak</button></span>, <span class="inline-flex items-center">구십 (90) <button class="speak-button ml-2" data-text="구십">Speak</button></span>.</p>
+                    <p class="mt-2"><strong>Hundreds:</strong> <span class="inline-flex items-center">백 (baek) - 100 <button class="speak-button ml-2" data-text="백">Speak</button></span>, <span class="inline-flex items-center">이백 (200) <button class="speak-button ml-2" data-text="이백">Speak</button></span>, <span class="inline-flex items-center">삼백 (300) <button class="speak-button ml-2" data-text="삼백">Speak</button></span>, etc.</p>
+                    <p class="mt-2"><strong>Thousands:</strong> <span class="inline-flex items-center">천 (cheon) - 1,000 <button class="speak-button ml-2" data-text="천">Speak</button></span>, <span class="inline-flex items-center">이천 (2,000) <button class="speak-button ml-2" data-text="이천">Speak</button></span>, etc.</p>
+                    <p class="mt-2"><strong>Ten thousands:</strong> <span class="inline-flex items-center">만 (man) - 10,000 <button class="speak-button ml-2" data-text="만">Speak</button></span></p>
+                    <p class="mt-2"><strong>Hundred millions:</strong> <span class="inline-flex items-center">억 (eok) - 100,000,000 <button class="speak-button ml-2" data-text="억">Speak</button></span></p>
+                </div>
+
+                <h3 class="text-xl font-medium mt-6 mb-2">Pure/Native Korean Numbers</h3>
+                <p>Used for counting items, telling age, and hours in time.</p>
+                <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-4 mt-4">
+                    <div class="p-3 bg-gray-700 rounded-lg">
+                        <p class="text-3xl font-bold mb-1">하나 (hana)</p>
+                        <p class="text-sm">1</p>
+                        <button class="speak-button" data-text="하나">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg">
+                        <p class="text-3xl font-bold mb-1">둘 (dul)</p>
+                        <p class="text-sm">2</p>
+                        <button class="speak-button" data-text="둘">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg">
+                        <p class="text-3xl font-bold mb-1">셋 (set)</p>
+                        <p class="text-sm">3</p>
+                        <button class="speak-button" data-text="셋">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg">
+                        <p class="text-3xl font-bold mb-1">넷 (net)</p>
+                        <p class="text-sm">4</p>
+                        <button class="speak-button" data-text="넷">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg">
+                        <p class="text-3xl font-bold mb-1">다섯 (daseot)</p>
+                        <p class="text-sm">5</p>
+                        <button class="speak-button" data-text="다섯">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg">
+                        <p class="text-3xl font-bold mb-1">여섯 (yeoseot)</p>
+                        <p class="text-sm">6</p>
+                        <button class="speak-button" data-text="여섯">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg">
+                        <p class="text-3xl font-bold mb-1">일곱 (ilgop)</p>
+                        <p class="text-sm">7</p>
+                        <button class="speak-button" data-text="일곱">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg">
+                        <p class="text-3xl font-bold mb-1">여덟 (yeodeolb)</p>
+                        <p class="text-sm">8</p>
+                        <button class="speak-button" data-text="여덟">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg">
+                        <p class="text-3xl font-bold mb-1">아홉 (ahop)</p>
+                        <p class="text-sm">9</p>
+                        <button class="speak-button" data-text="아홉">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg">
+                        <p class="text-3xl font-bold mb-1">열 (yeol)</p>
+                        <p class="text-sm">10</p>
+                        <button class="speak-button" data-text="열">Speak</button>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <p class="mt-2"><strong>Tens:</strong> <span class="inline-flex items-center">스물 (seumul) - 20<button class="speak-button ml-2" data-text="스물">Speak</button></span>, <span class="inline-flex items-center">서른 (seoreun) - 30<button class="speak-button ml-2" data-text="서른">Speak</button></span>, <span class="inline-flex items-center">마흔 (maheun) - 40<button class="speak-button ml-2" data-text="마흔">Speak</button></span>, <span class="inline-flex items-center">쉰 (swin) - 50<button class="speak-button ml-2" data-text="쉰">Speak</button></span>, <span class="inline-flex items-center">예순 (yesun) - 60<button class="speak-button ml-2" data-text="예순">Speak</button></span>, <span class="inline-flex items-center">일흔 (ilheun) - 70<button class="speak-button ml-2" data-text="일흔">Speak</button></span>, <span class="inline-flex items-center">여든 (yeodeun) - 80<button class="speak-button ml-2" data-text="여든">Speak</button></span>, <span class="inline-flex items-center">아흔 (aheun) - 90<button class="speak-button ml-2" data-text="아흔">Speak</button></span>, <span class="inline-flex items-center">백 (baek) - 100<button class="speak-button ml-2" data-text="백">Speak</button></span>.</p>
+                </div>
+                <div id="numbers-example" class="mt-6">
+                    <h3 class="text-xl font-medium">Generate an example sentence:</h3>
+                    <p class="mt-2 text-gray-400">Click the button to get a random sentence using both number systems.</p>
+                    <button id="generate-numbers" class="generate-button mt-2">Generate Example</button>
+                    <div id="numbers-result" class="mt-4 p-4 bg-gray-700 rounded-lg hidden">
+                        <p id="numbers-text"></p>
+                        <p class="text-sm mt-2"><button id="speak-numbers" class="speak-button">Speak</button></p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="lesson-time" class="lesson-card hidden">
+                <h2 class="text-2xl font-semibold mb-4">Lesson 4: Telling Time</h2>
+                <div class="mt-4 p-4 bg-gray-700 rounded-lg">
+                    <p class="font-bold">Lesson Highlight: Telling time combines Native Korean numbers for hours and Sino-Korean numbers for minutes.</p>
+                    <button class="speak-button mt-2" data-text="시간을 말할 때는 시에 고유 한국어 숫자를 쓰고 분에 한자어 숫자를 씁니다.">Read Aloud</button>
+                </div>
+                <p>In Korean, you use a combination of Native and Sino-Korean numbers to tell time.</p>
+                
+                <h3 class="text-xl font-medium mt-6 mb-2">The Formula:</h3>
+                <p class="mt-2 font-bold"><span class="inline-flex items-center"><strong>(AM/PM)</strong> <button class="speak-button ml-2" data-text="오전 오후">Speak</button></span> + <span class="inline-flex items-center"><strong>Hour (Native)</strong> <button class="speak-button ml-2" data-text="한 시">Speak</button></span> <span class="inline-flex items-center"><strong>시 (si)</strong> <button class="speak-button ml-2" data-text="시">Speak</button></span> + <span class="inline-flex items-center"><strong>Minute (Sino)</strong> <button class="speak-button ml-2" data-text="일분">Speak</button></span> <span class="inline-flex items-center"><strong>분 (bun)</strong> <button class="speak-button ml-2" data-text="분">Speak</button></span> + <span class="inline-flex items-center"><strong>Second (Sino)</strong> <button class="speak-button ml-2" data-text="일초">Speak</button></span> <span class="inline-flex items-center"><strong>초 (cho)</strong> <button class="speak-button ml-2" data-text="초">Speak</button></span></strong></p>
+                <div class="mt-4 p-4 bg-gray-700 rounded-lg">
+                    <p class="font-bold">Words to Know:</p>
+                    <ul class="list-disc list-inside mt-2">
+                        <li><span class="inline-flex items-center"><strong>오전 (ojeon)</strong> - AM <button class="speak-button ml-2" data-text="오전">Speak</button></span></li>
+                        <li><span class="inline-flex items-center"><strong>오후 (ohu)</strong> - PM <button class="speak-button ml-2" data-text="오후">Speak</button></span></li>
+                        <li><span class="inline-flex items-center"><strong>정각 (jeong-gak)</strong> - o'clock sharp <button class="speak-button ml-2" data-text="정각">Speak</button></span></li>
+                        <li><span class="inline-flex items-center"><strong>반 (ban)</strong> - half past (e.g., 3:30 is "three and a half") <button class="speak-button ml-2" data-text="반">Speak</button></span></li>
+                    </ul>
+                </div>
+                
+                <h3 class="text-xl font-medium mt-6 mb-2">Hours (1-12) - Native Korean</h3>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-4">
+                    <div class="p-3 bg-gray-700 rounded-lg">
+                        <p class="text-3xl font-bold mb-1">한 시 (han si)</p>
+                        <p class="text-sm">1 o'clock</p>
+                        <button class="speak-button" data-text="한 시">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg">
+                        <p class="text-3xl font-bold mb-1">두 시 (du si)</p>
+                        <p class="text-sm">2 o'clock</p>
+                        <button class="speak-button" data-text="두 시">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg">
+                        <p class="text-3xl font-bold mb-1">세 시 (se si)</p>
+                        <p class="text-sm">3 o'clock</p>
+                        <button class="speak-button" data-text="세 시">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg">
+                        <p class="text-3xl font-bold mb-1">네 시 (ne si)</p>
+                        <p class="text-sm">4 o'clock</p>
+                        <button class="speak-button" data-text="네 시">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg">
+                        <p class="text-3xl font-bold mb-1">다섯 시 (daseot si)</p>
+                        <p class="text-sm">5 o'clock</p>
+                        <button class="speak-button" data-text="다섯 시">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg">
+                        <p class="text-3xl font-bold mb-1">여섯 시 (yeoseot si)</p>
+                        <p class="text-sm">6 o'clock</p>
+                        <button class="speak-button" data-text="여섯 시">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg">
+                        <p class="text-3xl font-bold mb-1">일곱 시 (ilgop si)</p>
+                        <p class="text-sm">7 o'clock</p>
+                        <button class="speak-button" data-text="일곱 시">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg">
+                        <p class="text-3xl font-bold mb-1">여덟 시 (yeodeolb si)</p>
+                        <p class="text-sm">8 o'clock</p>
+                        <button class="speak-button" data-text="여덟 시">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg">
+                        <p class="text-3xl font-bold mb-1">아홉 시 (ahop si)</p>
+                        <p class="text-sm">9 o'clock</p>
+                        <button class="speak-button" data-text="아홉 시">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg">
+                        <p class="text-3xl font-bold mb-1">열 시 (yeol si)</p>
+                        <p class="text-sm">10 o'clock</p>
+                        <button class="speak-button" data-text="열 시">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg">
+                        <p class="text-3xl font-bold mb-1">열한 시 (yeolhan si)</p>
+                        <p class="text-sm">11 o'clock</p>
+                        <button class="speak-button" data-text="열한 시">Speak</button>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg">
+                        <p class="text-3xl font-bold mb-1">열두 시 (yeoldu si)</p>
+                        <p class="text-sm">12 o'clock</p>
+                        <button class="speak-button" data-text="열두 시">Speak</button>
+                    </div>
+                </div>
+
+                <div id="time-example" class="mt-6">
+                    <h3 class="text-xl font-medium">Generate an example sentence:</h3>
+                    <p class="mt-2 text-gray-400">Click the button to get a random time sentence.</p>
+                    <button id="generate-time" class="generate-button mt-2">Generate Example</button>
+                    <div id="time-result" class="mt-4 p-4 bg-gray-700 rounded-lg hidden">
+                        <p id="time-text"></p>
+                        <p class="text-sm mt-2"><button id="speak-time" class="speak-button">Speak</button></p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="lesson-date" class="lesson-card hidden">
+                <h2 class="text-2xl font-semibold mb-4">Lesson 5: Telling Date</h2>
+                <div class="mt-4 p-4 bg-gray-700 rounded-lg">
+                    <p class="font-bold">Lesson Highlight: Telling the date uses Sino-Korean numbers for the year, month, and day.</p>
+                    <button class="speak-button mt-2" data-text="날짜를 말할 때는 연, 월, 일에 한자어 숫자를 사용합니다.">Read Aloud</button>
+                </div>
+                <p>To tell the date in Korean, you use Sino-Korean numbers for the year, month, and day, along with specific particles. The format is similar to English: Year + Month + Day.</p>
+                <div class="mt-4 p-4 bg-gray-700 rounded-lg">
+                    <p class="font-bold">Date Words:</p>
+                    <ul class="list-disc list-inside mt-2">
+                        <li><span class="inline-flex items-center"><strong>년 (nyeon)</strong> - year<button class="speak-button ml-2" data-text="년">Speak</button></span></li>
+                        <li><span class="inline-flex items-center"><strong>월 (wol)</strong> - month<button class="speak-button ml-2" data-text="월">Speak</button></span></li>
+                        <li><span class="inline-flex items-center"><strong>일 (il)</strong> - day<button class="speak-button ml-2" data-text="일">Speak</button></span></li>
+                        <li><span class="inline-flex items-center"><strong>요일 (yoil)</strong> - day of the week<button class="speak-button ml-2" data-text="요일">Speak</button></span></li>
+                    </ul>
+                </div>
+                <div class="mt-4 p-4 bg-gray-700 rounded-lg">
+                    <p class="font-bold">Days of the Week:</p>
+                    <ul class="list-disc list-inside mt-2">
+                        <li><span class="inline-flex items-center"><strong>월요일 (woryoil)</strong> - Monday<button class="speak-button ml-2" data-text="월요일">Speak</button></span></li>
+                        <li><span class="inline-flex items-center"><strong>화요일 (hwayoil)</strong> - Tuesday<button class="speak-button ml-2" data-text="화요일">Speak</button></span></li>
+                        <li><span class="inline-flex items-center"><strong>수요일 (suyoil)</strong> - Wednesday<button class="speak-button ml-2" data-text="수요일">Speak</button></span></li>
+                        <li><span class="inline-flex items-center"><strong>목요일 (mogyoil)</strong> - Thursday<button class="speak-button ml-2" data-text="목요일">Speak</button></span></li>
+                        <li><span class="inline-flex items-center"><strong>금요일 (geumyoil)</strong> - Friday<button class="speak-button ml-2" data-text="금요일">Speak</button></span></li>
+                        <li><span class="inline-flex items-center"><strong>토요일 (toyoil)</strong> - Saturday<button class="speak-button ml-2" data-text="토요일">Speak</button></span></li>
+                        <li><span class="inline-flex items-center"><strong>일요일 (iryoil)</strong> - Sunday<button class="speak-button ml-2" data-text="일요일">Speak</button></span></li>
+                    </ul>
+                </div>
+                <div id="date-example" class="mt-6">
+                    <h3 class="text-xl font-medium">Generate an example sentence:</h3>
+                    <p class="mt-2 text-gray-400">Click the button to get a random sentence about a date or a specific day of the week.</p>
+                    <button id="generate-date" class="generate-button mt-2">Generate Example</button>
+                    <div id="date-result" class="mt-4 p-4 bg-gray-700 rounded-lg hidden">
+                        <p id="date-text"></p>
+                        <p class="text-sm mt-2"><button id="speak-date" class="speak-button">Speak</button></p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="lesson-counters" class="lesson-card hidden">
+                <h2 class="text-2xl font-semibold mb-4">Lesson 6: Korean Counters</h2>
+                <div class="mt-4 p-4 bg-gray-700 rounded-lg">
+                    <p class="font-bold">Lesson Highlight: Specific counter words are used to count items, and they are usually paired with Native Korean numbers.</p>
+                    <button class="speak-button mt-2" data-text="특정 물건을 셀 때 고유 한국어 숫자와 함께 계수사를 사용합니다.">Read Aloud</button>
+                </div>
+                <p>In Korean, you use a specific counter word to count objects. Native Korean numbers are almost always used with these counters.</p>
+                <div class="mt-4 p-4 bg-gray-700 rounded-lg">
+                    <p class="font-bold">Common Counters:</p>
+                    <ul class="list-disc list-inside mt-2">
+                        <li><span class="inline-flex items-center"><strong>명 (myeong)</strong> - people<button class="speak-button ml-2" data-text="명">Speak</button></span></li>
+                        <li><span class="inline-flex items-center"><strong>마리 (mari)</strong> - animals<button class="speak-button ml-2" data-text="마리">Speak</button></span></li>
+                        <li><span class="inline-flex items-center"><strong>개 (gae)</strong> - general items<button class="speak-button ml-2" data-text="개">Speak</button></span></li>
+                        <li><span class="inline-flex items-center"><strong>권 (gwon)</strong> - books<button class="speak-button ml-2" data-text="권">Speak</button></span></li>
+                        <li><span class="inline-flex items-center"><strong>잔 (jan)</strong> - glasses/cups<button class="speak-button ml-2" data-text="잔">Speak</button></span></li>
+                        <li><span class="inline-flex items-center"><strong>대 (dae)</strong> - vehicles, electronics<button class="speak-button ml-2" data-text="대">Speak</button></span></li>
+                    </ul>
+                </div>
+                <p class="mt-4"><strong>The Formula:</strong> Noun + Native Korean Number + Counter</p>
+                <div id="counters-example" class="mt-6">
+                    <h3 class="text-xl font-medium">Generate an example sentence:</h3>
+                    <p class="mt-2 text-gray-400">Click the button to get a random sentence using a Korean counter.</p>
+                    <button id="generate-counters" class="generate-button mt-2">Generate Example</button>
+                    <div id="counters-result" class="mt-4 p-4 bg-gray-700 rounded-lg hidden">
+                        <p id="counters-text"></p>
+                        <p class="text-sm mt-2"><button id="speak-counters" class="speak-button">Speak</button></p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="lesson-verbs-adj" class="lesson-card hidden">
+                <h2 class="text-2xl font-semibold mb-4">Lessons 7-12: Verb & Adjective Usage</h2>
+                <div class="mt-4 p-4 bg-gray-700 rounded-lg">
+                    <p class="font-bold">Lesson Highlight: Verbs and adjectives are modified with conjunctions, plurals, possessives, and honorifics to express a variety of meanings.</p>
+                    <button class="speak-button mt-2" data-text="동사와 형용사는 다양한 의미를 나타내기 위해 접속사, 복수형, 소유격, 존칭과 함께 사용됩니다.">Read Aloud</button>
+                </div>
+                <p>This lesson covers several key ways to connect and modify verbs and adjectives to form more complex and respectful sentences.</p>
+                
+                <h3 class="text-xl font-medium mt-6 mb-2">Verb & Adjective Conjunctions</h3>
+                <div class="mt-4 p-4 bg-gray-700 rounded-lg">
+                    <p class="font-bold">-고 (-go): "and"</p>
+                    <p class="ml-4">Used to list actions or states in sequence. It attaches to the verb or adjective stem.</p>
+                </div>
+                <div class="mt-4 p-4 bg-gray-700 rounded-lg">
+                    <p class="font-bold">-지만 (-jiman): "but"</p>
+                    <p class="ml-4">Used to express a contrast. It attaches to the verb or adjective stem.</p>
+                </div>
+                <div class="mt-4 p-4 bg-gray-700 rounded-lg">
+                    <p class="font-bold">-아/어서 (-a/eoseo): "because" or "so"</p>
+                    <p class="ml-4">Used to express a reason or cause.</p>
+                </div>
+
+                <h3 class="text-xl font-medium mt-6 mb-2">Plurals & Possessives</h3>
+                 <div class="mt-4 p-4 bg-gray-700 rounded-lg">
+                    <p class="font-bold">Plural Marker: 들 (deul)</p>
+                    <p class="ml-4">The particle '들' can be attached to a noun to make it plural, but it is often optional and used mostly for people.</p>
+                </div>
+                <div class="mt-4 p-4 bg-gray-700 rounded-lg">
+                    <p class="font-bold">Possessive Particle: 의 (ui)</p>
+                    <p class="ml-4">The particle '의' is used to show possession, similar to 's or 'of' in English.</p>
+                </div>
+
+                <h3 class="text-xl font-medium mt-6 mb-2">Question Words</h3>
+                <div class="mt-4 p-4 bg-gray-700 rounded-lg">
+                    <p class="font-bold">Common Question Words:</p>
+                    <ul class="list-disc list-inside mt-2">
+                        <li><span class="inline-flex items-center"><strong>누구 (nugu)</strong> - who<button class="speak-button ml-2" data-text="누구">Speak</button></span></li>
+                        <li><span class="inline-flex items-center"><strong>무엇 (mueot)</strong> - what<button class="speak-button ml-2" data-text="무엇">Speak</button></span></li>
+                        <li><span class="inline-flex items-center"><strong>어디 (eodi)</strong> - where<button class="speak-button ml-2" data-text="어디">Speak</button></span></li>
+                        <li><span class="inline-flex items-center"><strong>언제 (eonje)</strong> - when<button class="speak-button ml-2" data-text="언제">Speak</button></span></li>
+                        <li><span class="inline-flex items-center"><strong>왜 (wae)</strong> - why<button class="speak-button ml-2" data-text="왜">Speak</button></span></li>
+                        <li><span class="inline-flex items-center"><strong>어떻게 (eotteoke)</strong> - how<button class="speak-button ml-2" data-text="어떻게">Speak</button></span></li>
+                    </ul>
+                </div>
+
+                <h3 class="text-xl font-medium mt-6 mb-2">Honorifics</h3>
+                 <div class="mt-4 p-4 bg-gray-700 rounded-lg">
+                    <p class="font-bold">Common Honorifics:</p>
+                    <ul class="list-disc list-inside mt-2">
+                        <li><span class="inline-flex items-center"><strong>-으시- (-eusi-) / -시- (-si-):</strong> A respectful infix added to verb stems.<button class="speak-button ml-2" data-text="으시 시">Speak</button></span></li>
+                        <li><span class="inline-flex items-center"><strong>님 (nim):</strong> An honorific suffix added to names or titles.<button class="speak-button ml-2" data-text="님">Speak</button></span></li>
+                    </ul>
+                </div>
+
+                <div id="verbs-adj-example" class="mt-6">
+                    <h3 class="text-xl font-medium">Generate an example sentence:</h3>
+                    <p class="mt-2 text-gray-400">Click the button to get a random sentence using one of the concepts from this combined lesson.</p>
+                    <button id="generate-verbs-adj" class="generate-button mt-2">Generate Example</button>
+                    <div id="verbs-adj-result" class="mt-4 p-4 bg-gray-700 rounded-lg hidden">
+                        <p id="verbs-adj-text"></p>
+                        <p class="text-sm mt-2"><button id="speak-verbs-adj" class="speak-button">Speak</button></p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="lesson-location-direction" class="lesson-card hidden">
+                <h2 class="text-2xl font-semibold mb-4">Lessons 13-14: Location, Direction & Other Particles</h2>
+                <div class="mt-4 p-4 bg-gray-700 rounded-lg">
+                    <p class="font-bold">Lesson Highlight: Particles are used to indicate location, direction, and to connect or emphasize parts of a sentence.</p>
+                    <button class="speak-button mt-2" data-text="조사는 위치, 방향을 나타내거나 문장 일부를 연결하거나 강조하는 데 사용됩니다.">Read Aloud</button>
+                </div>
+                <p>This combined lesson covers important particles that indicate location, direction, and add nuance to your sentences.</p>
+                
+                <h3 class="text-xl font-medium mt-6 mb-2">Location and Direction Particles</h3>
+                <div class="mt-4 p-4 bg-gray-700 rounded-lg">
+                    <p class="font-bold">-에 (-e): "at," "to," or "in"</p>
+                    <p class="ml-4">Indicates a static location or the destination of movement.</p>
+                </div>
+                <div class="mt-4 p-4 bg-gray-700 rounded-lg">
+                    <p class="font-bold">-에서 (-eseo): "at," "in," or "from"</p>
+                    <p class="ml-4">Indicates the location where an action takes place.</p>
+                </div>
+                <div class="mt-4 p-4 bg-gray-700 rounded-lg">
+                    <p class="font-bold">-으로/로 (-euro/ro): "to" or "towards"</p>
+                    <p class="ml-4">Indicates direction.</p>
+                </div>
+
+                <h3 class="text-xl font-medium mt-6 mb-2">Connecting & Emphasizing Particles</h3>
+                <div class="mt-4 p-4 bg-gray-700 rounded-lg">
+                    <p class="font-bold">-와/과 (-wa/gwa): "and" (for nouns)</p>
+                    <p class="ml-4">Used to connect two or more nouns.</p>
+                </div>
+                <div class="mt-4 p-4 bg-gray-700 rounded-lg">
+                    <p class="font-bold">-도 (-do): "also" or "too"</p>
+                    <p class="ml-4">This particle is used to add emphasis, meaning "also" or "too."</p>
+                </div>
+
+                <div id="location-direction-example" class="mt-6">
+                    <h3 class="text-xl font-medium">Generate an example sentence:</h3>
+                    <p class="mt-2 text-gray-400">Click the button to get a random sentence using one of the particles from this lesson.</p>
+                    <button id="generate-location-direction" class="generate-button mt-2">Generate Example</button>
+                    <div id="location-direction-result" class="mt-4 p-4 bg-gray-700 rounded-lg hidden">
+                        <p id="location-direction-text"></p>
+                        <p class="text-sm mt-2"><button id="speak-location-direction" class="speak-button">Speak</button></p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="lesson-sentence" class="lesson-card hidden">
+                <h2 class="text-2xl font-semibold mb-4">Lesson 15: Basic Sentence Structure</h2>
+                <div class="mt-4 p-4 bg-gray-700 rounded-lg">
+                    <p class="font-bold">Lesson Highlight: The basic Korean sentence structure is Subject-Object-Verb, which is different from English.</p>
+                    <button class="speak-button mt-2" data-text="한국어의 기본 문장 구조는 주어-목적어-동사로 영어와는 다릅니다.">Read Aloud</button>
+                </div>
+                <p>The basic Korean sentence structure is Subject-Object-Verb (S-O-V), which is different from English's S-V-O. Particles are added to nouns to show their role in the sentence.</p>
+                <div class="mt-4 p-4 bg-gray-700 rounded-lg">
+                    <p class="font-bold">Subject Particles: 은/는 (eun/neun) and 이/가 (i/ga)</p>
+                    <p class="ml-4">These mark the subject of a sentence.</p>
+                    <ul class="list-disc list-inside mt-2 ml-4">
+                        <li><span class="inline-flex items-center"><strong>은/는 (eun/neun):</strong> Used for the topic of the sentence. 은 for consonants, 는 for vowels.<button class="speak-button ml-2" data-text="은는">Speak</button></span></li>
+                        <li><span class="inline-flex items-center"><strong>이/가 (i/ga):</strong> Used to mark the subject. 이 for consonants, 가 for vowels.<button class="speak-button ml-2" data-text="이가">Speak</button></span></li>
+                    </ul>
+                    <p class="mt-2 ml-4">Example: <span class="inline-flex items-center">저는 학생이에요 (jeoneun haksaeng-ieyo) - As for me, I am a student.<button class="speak-button ml-2" data-text="저는 학생이에요">Speak</button></span></p>
+                </div>
+                <div class="mt-4 p-4 bg-gray-700 rounded-lg">
+                    <p class="font-bold">Object Particles: 을/를 (eul/reul)</p>
+                    <p class="ml-4">These mark the object of a verb.</p>
+                    <ul class="list-disc list-inside mt-2 ml-4">
+                        <li><span class="inline-flex items-center"><strong>을 (eul):</strong> Used for nouns ending in a consonant.<button class="speak-button ml-2" data-text="을">Speak</button></span></li>
+                        <li><span class="inline-flex items-center"><strong>를 (reul):</strong> Used for nouns ending in a vowel.<button class="speak-button ml-2" data-text="를">Speak</button></span></li>
+                    </ul>
+                    <p class="mt-2 ml-4">Example: <span class="inline-flex items-center">책을 읽어요 (chaeg-eul ilgeoyo) - I read a book.<button class="speak-button ml-2" data-text="책을 읽어요">Speak</button></span></p>
+                </div>
+                <div id="sentence-example" class="mt-6">
+                    <h3 class="text-xl font-medium">Generate an example sentence:</h3>
+                    <p class="mt-2 text-gray-400">Click the button to get a random sentence that shows the S-O-V structure and particle usage.</p>
+                    <button id="generate-sentence" class="generate-button mt-2">Generate Example</button>
+                    <div id="sentence-result" class="mt-4 p-4 bg-gray-700 rounded-lg hidden">
+                        <p id="sentence-text"></p>
+                        <p class="text-sm mt-2"><button id="speak-sentence" class="speak-button">Speak</button></p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="message-box" class="message-box mt-4 hidden"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const lessons = document.querySelectorAll('.lesson-card');
+            const navButtons = document.querySelectorAll('.nav-button');
+            const messageBox = document.getElementById('message-box');
+            const apiKey = "AIzaSyD66ilnAO6R0FiiUh98c8RECXD_zBXPqg4";
+            const ttsApiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=" + apiKey;
+            const geminiApiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=" + apiKey;
+            const voices = [
+                { name: "Bright", value: "Zephyr" },
+                { name: "Upbeat", value: "Puck" },
+                { name: "Informative", value: "Charon" },
+                { name: "Firm", value: "Kore" },
+                { name: "Excitable", value: "Fenrir" },
+                { name: "Youthful", value: "Leda" },
+                { name: "Firm", value: "Orus" },
+                { name: "Breezy", value: "Aoede" },
+                { name: "Easy-going", value: "Callirrhoe" },
+                { name: "Bright", value: "Autonoe" },
+                { name: "Breathy", value: "Enceladus" },
+                { name: "Clear", value: "Iapetus" },
+                { name: "Easy-going", value: "Umbriel" },
+                { name: "Smooth", value: "Algieba" },
+                { name: "Smooth", value: "Despina" },
+                { name: "Clear", value: "Erinome" },
+                { name: "Gravelly", value: "Algenib" },
+                { name: "Informative", value: "Rasalgethi" },
+                { name: "Upbeat", value: "Laomedeia" },
+                { name: "Soft", value: "Achernar" },
+                { name: "Firm", value: "Alnilam" },
+                { name: "Even", value: "Schedar" },
+                { name: "Mature", value: "Gacrux" },
+                { name: "Forward", value: "Pulcherrima" },
+                { name: "Friendly", value: "Achird" },
+                { name: "Casual", value: "Zubenelgenubi" },
+                { name: "Gentle", value: "Vindemiatrix" },
+                { name: "Lively", value: "Sadachbia" },
+                { name: "Knowledgeable", value: "Sadaltager" },
+                { name: "Warm", value: "Sulafat" }
+            ];
+            let isAudioPlaying = false;
+            
+            function showLesson(lessonId) {
+                lessons.forEach(lesson => {
+                    lesson.classList.add('hidden');
+                });
+                document.getElementById('lesson-' + lessonId).classList.remove('hidden');
+                navButtons.forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.querySelector(`[data-lesson="${lessonId}"]`).classList.add('active');
+            }
+
+            navButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const lessonId = button.getAttribute('data-lesson');
+                    showLesson(lessonId);
+                });
+            });
+
+            function showMessage(text, isError = true) {
+                messageBox.textContent = text;
+                messageBox.className = `p-4 rounded-lg mt-4 ${isError ? 'bg-red-800 text-red-100' : 'bg-green-800 text-green-100'}`;
+                messageBox.classList.remove('hidden');
+            }
+
+            function hideMessage() {
+                messageBox.classList.add('hidden');
+            }
+
+            function base64ToArrayBuffer(base64) {
+                const binaryString = atob(base64);
+                const len = binaryString.length;
+                const bytes = new Uint8Array(len);
+                for (let i = 0; i < len; i++) {
+                    bytes[i] = binaryString.charCodeAt(i);
+                }
+                return bytes.buffer;
+            }
+
+            function pcmToWav(pcmData, sampleRate) {
+                const pcm16 = new Int16Array(pcmData);
+                const buffer = new ArrayBuffer(44 + pcm16.length * 2);
+                const view = new DataView(buffer);
+
+                writeString(view, 0, 'RIFF');
+                view.setUint32(4, 36 + pcm16.length * 2, true);
+                writeString(view, 8, 'WAVE');
+                writeString(view, 12, 'fmt ');
+                view.setUint32(16, 16, true);
+                view.setUint16(20, 1, true);
+                view.setUint16(22, 1, true);
+                view.setUint32(24, sampleRate, true);
+                view.setUint32(28, sampleRate * 2, true);
+                view.setUint16(32, 2, true);
+                view.setUint16(34, 16, true);
+                writeString(view, 36, 'data');
+                view.setUint32(40, pcm16.length * 2, true);
+
+                let offset = 44;
+                for (let i = 0; i < pcm16.length; i++) {
+                    view.setInt16(offset, pcm16[i], true);
+                    offset += 2;
+                }
+
+                return new Blob([view], { type: 'audio/wav' });
+
+                function writeString(view, offset, string) {
+                    for (let i = 0; i < string.length; i++) {
+                        view.setUint8(offset + i, string.charCodeAt(i));
+                    }
+                }
+            }
+            
+            async function getAndPlayAudio(text, event) {
+                if (isAudioPlaying) {
+                    return;
+                }
+                isAudioPlaying = true;
+
+                const speakButton = event.target.closest('.speak-button');
+                if (!speakButton) {
+                    isAudioPlaying = false;
+                    return;
+                }
+            
+                const originalText = speakButton.textContent;
+                speakButton.textContent = '...';
+                speakButton.disabled = true;
+                hideMessage();
+            
+                const voice = voices.find(v => v.value === "Kore");
+            
+                try {
+                    const payload = {
+                        contents: [{
+                            parts: [{ text: text }]
+                        }],
+                        generationConfig: {
+                            responseModalities: ["AUDIO"],
+                            speechConfig: {
+                                voiceConfig: {
+                                    prebuiltVoiceConfig: { voiceName: voice.value }
+                                }
+                            }
+                        }
+                    };
+            
+                    const response = await fetch(ttsApiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+            
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(`API returned ${response.status}: ${errorData.error.message}`);
+                    }
+            
+                    const result = await response.json();
+                    const candidate = result?.candidates?.[0];
+                    const part = candidate?.content?.parts?.[0];
+                    const audioData = part?.inlineData?.data;
+                    const mimeType = part?.inlineData?.mimeType;
+            
+                    if (audioData && mimeType && mimeType.startsWith("audio/")) {
+                        const sampleRateMatch = mimeType.match(/rate=(\d+)/);
+                        const sampleRate = sampleRateMatch ? parseInt(sampleRateMatch[1], 10) : 24000;
+                        
+                        const pcmArrayBuffer = base64ToArrayBuffer(audioData);
+                        const wavBlob = pcmToWav(pcmArrayBuffer, sampleRate);
+                        const audioUrl = URL.createObjectURL(wavBlob);
+                        const audio = new Audio(audioUrl);
+                        audio.play().catch(e => showMessage(`Error playing audio: ${e.message}`));
+                    } else {
+                        throw new Error("Audio data missing or invalid mime type from API.");
+                    }
+            
+                } catch (error) {
+                    console.error("API call failed:", error);
+                    showMessage("Failed to generate audio. Please check your network connection and try again.");
+                } finally {
+                    speakButton.textContent = originalText;
+                    speakButton.disabled = false;
+                    isAudioPlaying = false;
+                }
+            }
+
+            async function generateExample(lesson) {
+                const button = document.getElementById(`generate-${lesson}`);
+                const resultBox = document.getElementById(`${lesson}-result`);
+                const resultText = document.getElementById(`${lesson}-text`);
+                const speakButton = document.getElementById(`${lesson}-result`).querySelector('.speak-button');
+
+                button.disabled = true;
+                button.textContent = 'Generating...';
+                resultBox.classList.add('hidden');
+                hideMessage();
+
+                let prompt = '';
+                if (lesson === 'ida') {
+                    prompt = 'Generate a short and simple Korean sentence using the informal polite "이다" verb forms (이에요/예요). Provide the Korean sentence and its English translation. Keep the response concise, only the sentences.';
+                } else if (lesson === 'numbers') {
+                    prompt = 'Generate a simple Korean sentence that uses both Native and Sino-Korean numbers. For example, "It is five o\'clock and thirty minutes." Use "시" for hours and "분" for minutes. Keep the response concise.';
+                } else if (lesson === 'time') {
+                    prompt = 'Generate a sentence in Korean telling a specific time. Use the Native Korean number for the hour and the Sino-Korean number for the minutes. For example: "It is 8:20 AM." Keep the response concise, only the sentences.';
+                } else if (lesson === 'date') {
+                    prompt = 'Generate a Korean sentence telling a specific date, including the year, month, and day, using Sino-Korean numbers. For example: "It is October 26, 2023." Keep the response concise, only the sentences.';
+                } else if (lesson === 'counters') {
+                    prompt = 'Generate a Korean sentence that counts objects using a Native Korean number and a counter particle (e.g., 개, 마리, 명). For example: "There are three apples." Keep the response concise, only the sentences.';
+                } else if (lesson === 'verbs-adj') {
+                    prompt = 'Generate a Korean sentence that uses one of the following: a verb conjunction (-고, -지만, -아서/어서), a plural marker (들), a possessive particle (의), a question word (누구, 무엇, etc.), or an honorific verb (-시-). Keep the response concise.';
+                } else if (lesson === 'location-direction') {
+                    prompt = 'Generate a Korean sentence using a location/direction particle (-에, -에서, -으로/로) or a connecting/emphasizing particle (-와/과, -도). For example: "I study at the library." Keep the response concise.';
+                } else if (lesson === 'sentence') {
+                    prompt = 'Generate a Korean sentence that demonstrates the Subject-Object-Verb (S-O-V) structure with the particles 은/는 and 을/를. For example: "I eat an apple." Keep the response concise, only the sentences.';
+                }
+
+                try {
+                    const payload = {
+                        contents: [{
+                            parts: [{ text: prompt }]
+                        }]
+                    };
+                    const response = await fetch(geminiApiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    const result = await response.json();
+                    const text = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                    if (text) {
+                        resultText.textContent = text;
+                        resultBox.classList.remove('hidden');
+                        speakButton.onclick = () => getAndPlayAudio(text.split('\n')[0]);
+                    } else {
+                        showMessage("Failed to generate example. Please try again.");
+                    }
+                } catch (error) {
+                    console.error("API call failed:", error);
+                    showMessage("Failed to generate example. Please check your network connection and try again.");
+                } finally {
+                    button.disabled = false;
+                    button.textContent = 'Generate Example';
+                }
+            }
+            
+            // Event listeners for all speak buttons
+            document.querySelectorAll('.speak-button[data-text]').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const text = event.target.getAttribute('data-text');
+                    getAndPlayAudio(text, event);
+                });
+            });
+
+            document.getElementById('generate-ida').addEventListener('click', () => generateExample('ida'));
+            document.getElementById('generate-numbers').addEventListener('click', () => generateExample('numbers'));
+            document.getElementById('generate-time').addEventListener('click', () => generateExample('time'));
+            document.getElementById('generate-date').addEventListener('click', () => generateExample('date'));
+            document.getElementById('generate-counters').addEventListener('click', () => generateExample('counters'));
+            document.getElementById('generate-verbs-adj').addEventListener('click', () => generateExample('verbs-adj'));
+            document.getElementById('generate-location-direction').addEventListener('click', () => generateExample('location-direction'));
+            document.getElementById('generate-sentence').addEventListener('click', () => generateExample('sentence'));
+
+            document.getElementById('speak-ida').addEventListener('click', (event) => getAndPlayAudio(document.getElementById('ida-text').textContent.split('\n')[0], event));
+            document.getElementById('speak-numbers').addEventListener('click', (event) => getAndPlayAudio(document.getElementById('numbers-text').textContent.split('\n')[0], event));
+            document.getElementById('speak-time').addEventListener('click', (event) => getAndPlayAudio(document.getElementById('time-text').textContent.split('\n')[0], event));
+            document.getElementById('speak-date').addEventListener('click', (event) => getAndPlayAudio(document.getElementById('date-text').textContent.split('\n')[0], event));
+            document.getElementById('speak-counters').addEventListener('click', (event) => getAndPlayAudio(document.getElementById('counters-text').textContent.split('\n')[0], event));
+            document.getElementById('speak-verbs-adj').addEventListener('click', (event) => getAndPlayAudio(document.getElementById('verbs-adj-text').textContent.split('\n')[0], event));
+            document.getElementById('speak-location-direction').addEventListener('click', (event) => getAndPlayAudio(document.getElementById('location-direction-text').textContent.split('\n')[0], event));
+            document.getElementById('speak-sentence').addEventListener('click', (event) => getAndPlayAudio(document.getElementById('sentence-text').textContent.split('\n')[0], event));
+
+            // Set default lesson
+            showLesson('hangeul');
+        });
+    </script>
+</body>
+</html>

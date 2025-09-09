@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Korean Vocabulary Learner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .btn {
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            transition: background-color 0.2s, transform 0.2s;
+            cursor: pointer;
+        }
+        .btn-primary {
+            background-color: #1e40af;
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #1d4ed8;
+            transform: translateY(-2px);
+        }
+        .btn-tts {
+            background-color: #f9a8d4;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            transition: background-color 0.2s, transform 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-tts:hover {
+            background-color: #ec4899;
+            transform: scale(1.05);
+        }
+        .quiz-option {
+            background-color: #f3f4f6;
+            border: 2px solid #e5e7eb;
+            color: #1f2937;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            text-align: center;
+            font-size: 1.125rem;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+        .quiz-option:hover {
+            background-color: #e5e7eb;
+            border-color: #d1d5db;
+        }
+        .quiz-option.correct {
+            background-color: #d1fae5;
+            border-color: #10b981;
+            font-weight: 600;
+        }
+        .quiz-option.incorrect {
+            background-color: #fee2e2;
+            border-color: #ef4444;
+            font-weight: 600;
+        }
+        .loading-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #1e40af;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Chat-specific styles */
+        #chatBox {
+            height: 500px;
+            overflow-y: auto;
+            border: 1px solid #e5e7eb;
+            background-color: #fafafa;
+            border-radius: 0.75rem;
+        }
+        .chat-message {
+            margin-bottom: 1rem;
+            padding: 0.75rem 1.25rem;
+            border-radius: 1rem;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+        .user-message {
+            background-color: #1e40af;
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 0;
+        }
+        .bot-message {
+            background-color: #dbeafe;
+            color: #1f2937;
+            border-bottom-left-radius: 0;
+        }
+    </style>
+</head>
+<body>
+<a href="index.html" class="px-4 py-2 bg-gray-700 text-white rounded-lg inline-block">
+                ⬅ return
+            </a>
+<div class="container flex flex-col items-center">
+    <div class="w-full">
+        <header class="text-center my-8">
+            <h1 class="text-4xl font-extrabold text-blue-900 tracking-tight">
+                Welcome to EPS-TOPIK Korean Vocabulary
+            </h1>
+        </header>
+
+        <!-- Dynamic Message Box -->
+        <div id="messageBox" class="hidden p-4 mb-4 rounded-lg text-sm transition-all duration-300 ease-in-out"></div>
+
+        <!-- Gemini Intro Section -->
+        <div class="card mb-8">
+            <h2 class="text-2xl font-bold mb-2 text-blue-800">Why Learn Korean?</h2>
+            <div id="introText" class="text-gray-600 leading-relaxed text-lg">
+                <div class="loading-spinner"></div>
+                <span class="ml-2">Loading introduction...</span>
+            </div>
+        </div>
+
+        <!-- Mode Selector and Category Dropdown -->
+        <div class="flex flex-col sm:flex-row items-center justify-between mb-8 space-y-4 sm:space-y-0 sm:space-x-4">
+            <div class="flex space-x-2 w-full sm:w-auto">
+                <button id="learnModeBtn" class="btn btn-primary w-1/3 sm:w-auto">Learn</button>
+                <button id="quizModeBtn" class="btn btn-primary w-1/3 sm:w-auto">Quiz</button>
+                <button id="chatModeBtn" class="btn btn-primary w-1/3 sm:w-auto">Chat</button>
+            </div>
+            <select id="categorySelect" class="bg-white border border-gray-300 text-gray-700 py-2 px-4 rounded-full shadow-sm w-full sm:w-auto">
+                <option value="">Loading categories...</option>
+            </select>
+        </div>
+
+        <!-- Learn Mode Section -->
+        <div id="learnMode" class="grid gap-6 grid-cols-1 md:grid-cols-2">
+            <!-- Vocabulary cards will be injected here by JavaScript -->
+        </div>
+
+        <!-- Quiz Mode Section -->
+        <div id="quizMode" class="hidden flex flex-col items-center">
+            <div id="quizCard" class="card w-full mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <div id="questionContainer" class="text-center w-full">
+                        <p id="englishWord" class="text-3xl font-bold mb-4 text-blue-900"></p>
+                    </div>
+                    <p id="scoreDisplay" class="text-xl font-semibold text-blue-700 flex-shrink-0">Score: 0/0</p>
+                </div>
+                <div id="optionsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Quiz options will be injected here -->
+                </div>
+            </div>
+            <button id="nextBtn" class="btn btn-primary hidden">Next Word</button>
+        </div>
+
+        <!-- Chat Mode Section -->
+        <div id="chatMode" class="hidden flex flex-col w-full">
+            <div id="chatBox" class="p-4 mb-4 flex flex-col space-y-4">
+                <div class="bot-message chat-message">
+                    안녕하세요! I'm your Korean practice partner. How can I help you learn today?
+                </div>
+            </div>
+            <div class="flex">
+                <input type="text" id="chatInput" class="flex-grow rounded-full border border-gray-300 px-4 py-2 mr-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Type your message...">
+                <button id="sendBtn" class="btn btn-primary">Send</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Constants for Gemini API
+    const GEMINI_TEXT_API = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=`;
+    const GEMINI_TTS_API = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=`;
+    const VOCABULARY_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRcnPTDqplxkiDDcKiZV3chp0BqxnhZuXcxoPSH-mmcFJlhlCAIZ7rCBa09KkaCPcgRKTggKOMv6m6s/pub?output=csv';
+
+    // UI Elements
+    const learnModeEl = document.getElementById('learnMode');
+    const quizModeEl = document.getElementById('quizMode');
+    const chatModeEl = document.getElementById('chatMode');
+    const learnModeBtn = document.getElementById('learnModeBtn');
+    const quizModeBtn = document.getElementById('quizModeBtn');
+    const chatModeBtn = document.getElementById('chatModeBtn');
+    const categorySelectEl = document.getElementById('categorySelect');
+    const introTextEl = document.getElementById('introText');
+    const messageBoxEl = document.getElementById('messageBox');
+    const englishWordEl = document.getElementById('englishWord');
+    const optionsContainerEl = document.getElementById('optionsContainer');
+    const nextBtnEl = document.getElementById('nextBtn');
+    const chatBoxEl = document.getElementById('chatBox');
+    const chatInputEl = document.getElementById('chatInput');
+    const sendBtnEl = document.getElementById('sendBtn');
+    const scoreDisplayEl = document.getElementById('scoreDisplay');
+
+    let vocabularyData = {};
+    let currentCategory = '';
+    let currentQuizWord = null;
+    let chatHistory = [{
+        role: "model",
+        parts: [{ text: "안녕하세요! I'm your Korean practice partner. How can I help you learn today?" }]
+    }];
+    let isChatting = false;
+    let score = 0;
+    let totalQuestions = 0;
+
+    // Helper functions
+    function showMessage(message, type = 'info') {
+        messageBoxEl.textContent = message;
+        messageBoxEl.className = 'p-4 mb-4 rounded-lg text-sm transition-all duration-300 ease-in-out';
+        if (type === 'success') {
+            messageBoxEl.classList.add('bg-green-100', 'text-green-800');
+        } else if (type === 'error') {
+            messageBoxEl.classList.add('bg-red-100', 'text-red-800');
+        } else {
+            messageBoxEl.classList.add('bg-blue-100', 'text-blue-800');
+        }
+        messageBoxEl.classList.remove('hidden');
+    }
+
+    function hideMessage() {
+        messageBoxEl.classList.add('hidden');
+    }
+
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    function switchMode(mode) {
+        learnModeEl.classList.add('hidden');
+        quizModeEl.classList.add('hidden');
+        chatModeEl.classList.add('hidden');
+        hideMessage();
+
+        if (mode === 'learn') {
+            learnModeEl.classList.remove('hidden');
+            renderVocabulary();
+        } else if (mode === 'quiz') {
+            score = 0;
+            totalQuestions = 0;
+            updateScoreDisplay();
+            quizModeEl.classList.remove('hidden');
+            generateQuizQuestion();
+        } else if (mode === 'chat') {
+            chatModeEl.classList.remove('hidden');
+            isChatting = true;
+        }
+    }
+
+    async function fetchVocabularyData() {
+        try {
+            const response = await fetch(VOCABULARY_URL);
+            if (!response.ok) {
+                throw new Error('Failed to fetch data from Google Sheet. Please check the URL and permissions.');
+            }
+            const csvText = await response.text();
+            parseCsvData(csvText);
+            populateCategories();
+            switchMode('learn'); // Initial mode
+        } catch (error) {
+            console.error('Error fetching vocabulary data:', error);
+            showMessage('Error: Could not load vocabulary. Please check the console for details.', 'error');
+        }
+    }
+
+    function parseCsvData(csvText) {
+        const lines = csvText.trim().split('\n');
+        const data = lines.slice(1).map(line => {
+            const [korean, english, category] = line.split(',');
+            return { korean: korean?.trim(), english: english?.trim(), category: category?.trim() };
+        });
+
+        vocabularyData = {};
+        data.forEach(item => {
+            if (item.korean && item.english && item.category) {
+                if (!vocabularyData[item.category]) {
+                    vocabularyData[item.category] = [];
+                }
+                vocabularyData[item.category].push(item);
+            }
+        });
+    }
+
+    function populateCategories() {
+        categorySelectEl.innerHTML = '';
+        const categories = Object.keys(vocabularyData).sort();
+        if (categories.length === 0) {
+            categorySelectEl.innerHTML = '<option value="">No categories found</option>';
+            return;
+        }
+
+        categories.forEach(category => {
+            const option = document.createElement('option');
+            option.value = category;
+            option.textContent = category;
+            categorySelectEl.appendChild(option);
+        });
+        currentCategory = categories[0];
+        renderVocabulary();
+    }
+
+    function renderVocabulary() {
+        learnModeEl.innerHTML = '';
+        const words = vocabularyData[currentCategory];
+        if (!words || words.length === 0) {
+            learnModeEl.innerHTML = `<p class="text-center text-gray-500">No vocabulary found for this category.</p>`;
+            return;
+        }
+
+        words.forEach(word => {
+            const card = document.createElement('div');
+            card.className = 'card flex flex-col sm:flex-row items-center justify-between p-4 space-y-4 sm:space-y-0 sm:space-x-4';
+            card.innerHTML = `
+                <div class="flex-grow">
+                    <p class="text-2xl font-bold text-gray-900">${word.korean}</p>
+                    <p class="text-lg text-gray-600">${word.english}</p>
+                </div>
+                <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 w-full sm:w-auto">
+                    <button class="btn btn-tts flex items-center justify-center" data-text="${word.korean}">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                            <path fill-rule="evenodd" d="M11.47 2.47a.75.75 0 0 1 1.06 0l4.5 4.5a.75.75 0 0 1-1.06 1.06L12 4.06l-4.5 4.5a.75.75 0 0 1-1.06-1.06l4.5-4.5ZM7.5 13.5a.75.75 0 0 1-.75.75H2.25a.75.75 0 0 1 0-1.5H6.75a.75.75 0 0 1 .75.75Zm6 0a.75.75 0 0 1 .75.75h4.5a.75.75 0 0 1 0-1.5h-4.5a.75.75 0 0 1-.75.75Zm-3.75 3a.75.75 0 0 1 .75.75h7.5a.75.75 0 0 1 0-1.5h-7.5a.75.75 0 0 1-.75.75Zm4.5-7.5a.75.75 0 0 1 .75.75h-4.5a.75.75 0 0 1 0-1.5h4.5a.75.75 0 0 1 .75.75ZM12 18a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V18.75a.75.75 0 0 1 .75-.75Zm3.75-3.75a.75.75 0 0 1 .75.75v5.25a.75.75 0 0 1-1.5 0V15a.75.75 0 0 1 .75-.75Zm-7.5 0a.75.75 0 0 1 .75.75v5.25a.75.75 0 0 1-1.5 0V15a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
+                        </svg>
+                        <span class="ml-2">Listen</span>
+                    </button>
+                </div>
+            `;
+            learnModeEl.appendChild(card);
+        });
+
+        // Add event listeners to new buttons
+        document.querySelectorAll('.btn-tts').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const textToSpeak = e.currentTarget.getAttribute('data-text');
+                speakKoreanWord(textToSpeak, e.currentTarget);
+            });
+        });
+    }
+
+    function updateScoreDisplay() {
+        scoreDisplayEl.textContent = `Score: ${score}/${totalQuestions}`;
+    }
+
+    function generateQuizQuestion() {
+        optionsContainerEl.innerHTML = '';
+        nextBtnEl.classList.add('hidden');
+        const words = vocabularyData[currentCategory];
+        if (!words || words.length < 4) {
+            optionsContainerEl.innerHTML = `<p class="text-center text-gray-500">Not enough words for a quiz in this category. Please choose another.</p>`;
+            englishWordEl.textContent = '';
+            return;
+        }
+
+        totalQuestions++;
+        updateScoreDisplay();
+
+        currentQuizWord = words[Math.floor(Math.random() * words.length)];
+        englishWordEl.textContent = currentQuizWord.english;
+
+        const options = [currentQuizWord.korean];
+        const decoys = words.filter(w => w.korean !== currentQuizWord.korean);
+        
+        while (options.length < 4) {
+            const randomDecoy = decoys[Math.floor(Math.random() * decoys.length)];
+            if (!options.includes(randomDecoy.korean)) {
+                options.push(randomDecoy.korean);
+            }
+        }
+
+        const shuffledOptions = shuffleArray(options);
+
+        shuffledOptions.forEach(option => {
+            const optionDiv = document.createElement('div');
+            optionDiv.className = 'quiz-option';
+            optionDiv.textContent = option;
+            optionDiv.addEventListener('click', () => checkAnswer(optionDiv, option));
+            optionsContainerEl.appendChild(optionDiv);
+        });
+    }
+
+    function checkAnswer(selectedOptionEl, selectedAnswer) {
+        if (!currentQuizWord) return;
+
+        const allOptions = optionsContainerEl.querySelectorAll('.quiz-option');
+        allOptions.forEach(el => el.style.pointerEvents = 'none'); // Disable clicking
+        
+        if (selectedAnswer === currentQuizWord.korean) {
+            selectedOptionEl.classList.add('correct');
+            score++;
+            showMessage('Correct! Great job.', 'success');
+        } else {
+            selectedOptionEl.classList.add('incorrect');
+            const correctAnswerEl = [...allOptions].find(el => el.textContent === currentQuizWord.korean);
+            if (correctAnswerEl) {
+                correctAnswerEl.classList.add('correct');
+            }
+            showMessage(`Incorrect. The correct answer was "${currentQuizWord.korean}".`, 'error');
+        }
+        updateScoreDisplay();
+        nextBtnEl.classList.remove('hidden');
+    }
+
+    // Gemini API integration for TTS
+    async function speakKoreanWord(text, buttonEl) {
+        if (buttonEl) {
+            buttonEl.disabled = true;
+            buttonEl.innerHTML = `<div class="loading-spinner w-4 h-4"></div>`;
+        }
+        try {
+            const payload = {
+                contents: [{
+                    parts: [{ text: text }]
+                }],
+                generationConfig: {
+                    responseModalities: ["AUDIO"],
+                    speechConfig: {
+                        voiceConfig: { prebuiltVoiceConfig: { voiceName: "Puck" } }
+                    }
+                },
+                model: "gemini-2.5-flash-preview-tts"
+            };
+
+            const response = await fetch(GEMINI_TTS_API, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const result = await response.json();
+            const audioPart = result?.candidates?.[0]?.content?.parts?.find(p => p.inlineData);
+            const audioData = audioPart?.inlineData?.data;
+
+            if (audioData) {
+                const sampleRate = parseInt(audioPart.inlineData.mimeType.match(/rate=(\d+)/)[1], 10);
+                const pcmData = base64ToArrayBuffer(audioData);
+                const pcm16 = new Int16Array(pcmData);
+                const wavBlob = pcmToWav(pcm16, sampleRate);
+                const audioUrl = URL.createObjectURL(wavBlob);
+                const audio = new Audio(audioUrl);
+                audio.play();
+            } else {
+                showMessage('Failed to generate audio. Please try again.', 'error');
+            }
+        } catch (error) {
+            console.error('TTS API error:', error);
+            showMessage('Failed to generate audio. Please check the console.', 'error');
+        } finally {
+            if (buttonEl) {
+                buttonEl.disabled = false;
+                buttonEl.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6"><path fill-rule="evenodd" d="M11.47 2.47a.75.75 0 0 1 1.06 0l4.5 4.5a.75.75 0 0 1-1.06 1.06L12 4.06l-4.5 4.5a.75.75 0 0 1-1.06-1.06l4.5-4.5ZM7.5 13.5a.75.75 0 0 1-.75.75H2.25a.75.75 0 0 1 0-1.5H6.75a.75.75 0 0 1 .75.75Zm6 0a.75.75 0 0 1 .75.75h4.5a.75.75 0 0 1 0-1.5h-4.5a.75.75 0 0 1-.75.75Zm-3.75 3a.75.75 0 0 1 .75.75h7.5a.75.75 0 0 1 0-1.5h-7.5a.75.75 0 0 1-.75.75Zm4.5-7.5a.75.75 0 0 1 .75.75h-4.5a.75.75 0 0 1 0-1.5h4.5a.75.75 0 0 1 .75.75ZM12 18a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V18.75a.75.75 0 0 1 .75-.75Zm3.75-3.75a.75.75 0 0 1 .75.75v5.25a.75.75 0 0 1-1.5 0V15a.75.75 0 0 1 .75-.75Zm-7.5 0a.75.75 0 0 1 .75.75v5.25a.75.75 0 0 1-1.5 0V15a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" /></svg><span class="ml-2">Listen</span>`;
+            }
+        }
+    }
+
+    // Helper to convert base64 PCM to WAV format
+    function base64ToArrayBuffer(base64) {
+        const binaryString = window.atob(base64);
+        const len = binaryString.length;
+        const bytes = new Uint8Array(len);
+        for (let i = 0; i < len; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+        }
+        return bytes.buffer;
+    }
+
+    function pcmToWav(pcmData, sampleRate) {
+        const numChannels = 1;
+        const bitsPerSample = 16;
+        const byteRate = sampleRate * numChannels * bitsPerSample / 8;
+        const blockAlign = numChannels * bitsPerSample / 8;
+        const dataSize = pcmData.length * 2;
+
+        const buffer = new ArrayBuffer(44 + dataSize);
+        const view = new DataView(buffer);
+
+        let offset = 0;
+        function writeString(str) {
+            for (let i = 0; i < str.length; i++) {
+                view.setUint8(offset + i, str.charCodeAt(i));
+            }
+            offset += str.length;
+        }
+
+        function writeUint32(val) {
+            view.setUint32(offset, val, true);
+            offset += 4;
+        }
+
+        function writeUint16(val) {
+            view.setUint16(offset, val, true);
+            offset += 2;
+        }
+
+        // RIFF chunk
+        writeString('RIFF');
+        writeUint32(36 + dataSize);
+        writeString('WAVE');
+
+        // fmt chunk
+        writeString('fmt ');
+        writeUint32(16);
+        writeUint16(1); // PCM
+        writeUint16(numChannels);
+        writeUint32(sampleRate);
+        writeUint32(byteRate);
+        writeUint16(blockAlign);
+        writeUint16(bitsPerSample);
+
+        // data chunk
+        writeString('data');
+        writeUint32(dataSize);
+        for (let i = 0; i < pcmData.length; i++) {
+            view.setInt16(offset, pcmData[i], true);
+            offset += 2;
+        }
+
+        return new Blob([view], { type: 'audio/wav' });
+    }
+
+    // Gemini API integration for Text Generation
+    async function generateIntroText() {
+        try {
+            const prompt = `Based on the following search results about the Korean language, write a very brief, friendly, and encouraging introduction for a website that helps people learn Korean vocabulary. Focus on its unique writing system, Hangul, and its global popularity due to K-pop and K-drama. Keep it to a maximum of two short paragraphs.
+            Search Results:
+            "Korean is the native language for about 81 million people... It is the national language of both North Korea and South Korea."
+            "Since the turn of the 21st century, aspects of Korean popular culture have spread around the world through globalization and cultural exports."
+            "Modern Korean is written in the Korean script (한글; Hangeul)... an alphabet system developed during the 15th century for that purpose."
+            "It contains 24 letters that were explicitly designed to be easy to learn, helping to improve the literacy of Korean people."
+            "The Korean language is commonly called Hangungmal in South Korea. Gugeo or Hangugeo are formal terms used for the language in South Korea."
+            `;
+
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }],
+                systemInstruction: { parts: [{ text: "You are an expert language tutor. Provide a concise, welcoming, and encouraging introduction." }] }
+            };
+
+            const response = await fetch(GEMINI_TEXT_API, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const result = await response.json();
+            const text = result?.candidates?.[0]?.content?.parts?.[0]?.text || "Welcome to your Korean vocabulary journey! Get ready to explore a beautiful language.";
+            introTextEl.textContent = text;
+        } catch (error) {
+            console.error('Intro text API error:', error);
+            introTextEl.textContent = "Welcome to your Korean vocabulary journey! Get ready to explore a beautiful language.";
+        }
+    }
+    
+    // Gemini API for Chat functionality
+    async function sendChatMessage() {
+        const userMessage = chatInputEl.value.trim();
+        if (!userMessage) return;
+
+        chatInputEl.value = '';
+        addMessageToChat(userMessage, 'user');
+        chatHistory.push({ role: "user", parts: [{ text: userMessage }] });
+
+        try {
+            addMessageToChat('...', 'bot'); // Show loading indicator
+            const payload = {
+                contents: chatHistory,
+                systemInstruction: { parts: [{ text: "You are a friendly and encouraging Korean language tutor. Respond to the user's questions or practice attempts in Korean. You can use English if it helps clarify a concept, but try to keep the conversation in Korean as much as possible. Focus on a natural conversation. Do not respond with a fixed number of sentences, just talk normally. Do not use markdown formatting. Always use an encouraging and friendly tone. Never break character." }] }
+            };
+
+            const response = await fetch(GEMINI_TEXT_API, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const result = await response.json();
+            const botResponse = result?.candidates?.[0]?.content?.parts?.[0]?.text || "죄송합니다. 오류가 발생했습니다. 다시 시도해 주세요."; // (Sorry, an error occurred. Please try again.)
+            
+            // Update the last message (loading indicator) with the actual response
+            const lastMessageEl = chatBoxEl.lastChild;
+            if (lastMessageEl && lastMessageEl.textContent === '...') {
+                lastMessageEl.textContent = botResponse;
+            } else {
+                addMessageToChat(botResponse, 'bot');
+            }
+            chatHistory.push({ role: "model", parts: [{ text: botResponse }] });
+            
+        } catch (error) {
+            console.error('Chat API error:', error);
+            const lastMessageEl = chatBoxEl.lastChild;
+            if (lastMessageEl && lastMessageEl.textContent === '...') {
+                lastMessageEl.textContent = "죄송합니다. 오류가 발생했습니다. 다시 시도해 주세요.";
+            } else {
+                addMessageToChat("죄송합니다. 오류가 발생했습니다. 다시 시도해 주세요.", 'bot');
+            }
+        } finally {
+            chatBoxEl.scrollTop = chatBoxEl.scrollHeight;
+        }
+    }
+
+    function addMessageToChat(text, sender) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `chat-message ${sender}-message`;
+        messageDiv.textContent = text;
+        chatBoxEl.appendChild(messageDiv);
+        chatBoxEl.scrollTop = chatBoxEl.scrollHeight;
+    }
+    
+    // Event listeners
+    window.onload = function() {
+        fetchVocabularyData();
+        generateIntroText();
+    };
+
+    learnModeBtn.addEventListener('click', () => switchMode('learn'));
+    quizModeBtn.addEventListener('click', () => switchMode('quiz'));
+    chatModeBtn.addEventListener('click', () => switchMode('chat'));
+    nextBtnEl.addEventListener('click', () => generateQuizQuestion());
+    categorySelectEl.addEventListener('change', (e) => {
+        currentCategory = e.target.value;
+        if (!learnModeEl.classList.contains('hidden')) {
+            renderVocabulary();
+        } else if (!quizModeEl.classList.contains('hidden')) {
+            score = 0;
+            totalQuestions = 0;
+            updateScoreDisplay();
+            generateQuizQuestion();
+        }
+    });
+
+    sendBtnEl.addEventListener('click', sendChatMessage);
+    chatInputEl.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            sendChatMessage();
+        }
+    });
+
+</script>
+
+</body>
+</html>
