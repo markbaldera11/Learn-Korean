@@ -1,0 +1,2542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clas-AI Korean Language Learning App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .korean-text {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        
+        .lesson-card {
+            transition: all 0.3s ease;
+        }
+        
+        .lesson-card:hover {
+            transform: translateY(-2px);
+        }
+        
+        .progress-bar {
+            transition: width 0.5s ease;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .speak-btn {
+            transition: all 0.2s ease;
+        }
+        
+        .speak-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .speak-btn:active {
+            transform: scale(0.95);
+        }
+
+        .quiz-option {
+            transition: all 0.3s ease;
+        }
+
+        .quiz-option:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .quiz-option.correct {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .quiz-option.incorrect {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+        .quiz-option.disabled {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <!-- Header -->
+    <div class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-md mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <button id="backBtn" class="p-2 rounded-full hover:bg-gray-100 transition-colors hidden">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                </button>
+                <h1 class="text-xl font-bold text-gray-800 korean-text">한국어 배우기</h1>
+                <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                    <span class="text-white font-bold text-sm">KR</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="max-w-md mx-auto px-4 py-6">
+        <!-- Home Screen -->
+        <div id="homeScreen" class="fade-in">
+            <!-- Progress Overview -->
+            <div class="bg-white rounded-2xl p-6 mb-6 shadow-lg">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4">Your Progress</h2>
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm text-gray-600">Overall Progress</span>
+                    <span class="text-sm font-medium text-blue-600" id="overallProgress">0%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-3">
+                    <div class="bg-gradient-to-r from-blue-500 to-purple-600 h-3 rounded-full progress-bar" style="width: 0%" id="progressBar"></div>
+                </div>
+            </div>
+
+            <!-- Lessons Grid -->
+            <div class="space-y-4">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">Lessons</h2>
+                
+                <!-- Lesson 1 -->
+                <div class="lesson-card bg-white rounded-xl p-4 shadow-md cursor-pointer" onclick="openLesson(1)">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-12 h-12 bg-gradient-to-r from-red-400 to-pink-500 rounded-xl flex items-center justify-center">
+                                <span class="text-white font-bold korean-text">한</span>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">Lesson 1: Hangeul</h3>
+                                <p class="text-sm text-gray-600">Korean Alphabet System</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="w-6 h-6 rounded-full bg-gray-200 lesson-status" data-lesson="1"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lesson 2 -->
+                <div class="lesson-card bg-white rounded-xl p-4 shadow-md cursor-pointer" onclick="openLesson(2)">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-12 h-12 bg-gradient-to-r from-orange-400 to-red-500 rounded-xl flex items-center justify-center">
+                                <span class="text-white font-bold korean-text">이</span>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">Lesson 2: "Ida" Verb</h3>
+                                <p class="text-sm text-gray-600">To be verb in Korean</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="w-6 h-6 rounded-full bg-gray-200 lesson-status" data-lesson="2"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lesson 3 -->
+                <div class="lesson-card bg-white rounded-xl p-4 shadow-md cursor-pointer" onclick="openLesson(3)">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-12 h-12 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center">
+                                <span class="text-white font-bold korean-text">수</span>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">Lesson 3: Numbers</h3>
+                                <p class="text-sm text-gray-600">Sino & Native Korean Numbers</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="w-6 h-6 rounded-full bg-gray-200 lesson-status" data-lesson="3"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lesson 4 -->
+                <div class="lesson-card bg-white rounded-xl p-4 shadow-md cursor-pointer" onclick="openLesson(4)">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-12 h-12 bg-gradient-to-r from-green-400 to-blue-500 rounded-xl flex items-center justify-center">
+                                <span class="text-white font-bold">🕐</span>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">Lesson 4: Telling Time</h3>
+                                <p class="text-sm text-gray-600">Hours, minutes, and time expressions</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="w-6 h-6 rounded-full bg-gray-200 lesson-status" data-lesson="4"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lesson 5 -->
+                <div class="lesson-card bg-white rounded-xl p-4 shadow-md cursor-pointer" onclick="openLesson(5)">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-12 h-12 bg-gradient-to-r from-blue-400 to-purple-500 rounded-xl flex items-center justify-center">
+                                <span class="text-white font-bold">📅</span>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">Lesson 5: Telling Date</h3>
+                                <p class="text-sm text-gray-600">Days, months, and years</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="w-6 h-6 rounded-full bg-gray-200 lesson-status" data-lesson="5"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lesson 6 -->
+                <div class="lesson-card bg-white rounded-xl p-4 shadow-md cursor-pointer" onclick="openLesson(6)">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-12 h-12 bg-gradient-to-r from-purple-400 to-pink-500 rounded-xl flex items-center justify-center">
+                                <span class="text-white font-bold korean-text">개</span>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">Lesson 6: Counters</h3>
+                                <p class="text-sm text-gray-600">Korean counting words</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="w-6 h-6 rounded-full bg-gray-200 lesson-status" data-lesson="6"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lessons 7-12 -->
+                <div class="lesson-card bg-white rounded-xl p-4 shadow-md cursor-pointer" onclick="openLesson(7)">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-12 h-12 bg-gradient-to-r from-indigo-400 to-blue-500 rounded-xl flex items-center justify-center">
+                                <span class="text-white font-bold korean-text">동</span>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">Lessons 7-12: Verbs & Adjectives</h3>
+                                <p class="text-sm text-gray-600">Conjugation patterns</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="w-6 h-6 rounded-full bg-gray-200 lesson-status" data-lesson="7"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lessons 13-14 -->
+                <div class="lesson-card bg-white rounded-xl p-4 shadow-md cursor-pointer" onclick="openLesson(13)">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-12 h-12 bg-gradient-to-r from-teal-400 to-green-500 rounded-xl flex items-center justify-center">
+                                <span class="text-white font-bold">📍</span>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">Lessons 13-14: Location & Direction</h3>
+                                <p class="text-sm text-gray-600">Particles and positioning</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="w-6 h-6 rounded-full bg-gray-200 lesson-status" data-lesson="13"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lesson 15 -->
+                <div class="lesson-card bg-white rounded-xl p-4 shadow-md cursor-pointer" onclick="openLesson(15)">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-12 h-12 bg-gradient-to-r from-pink-400 to-red-500 rounded-xl flex items-center justify-center">
+                                <span class="text-white font-bold korean-text">문</span>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">Lesson 15: Sentence Structure</h3>
+                                <p class="text-sm text-gray-600">Word order and particles</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="w-6 h-6 rounded-full bg-gray-200 lesson-status" data-lesson="15"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lesson Content Screen -->
+        <div id="lessonScreen" class="hidden fade-in">
+            <div id="lessonContent"></div>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quizScreen" class="hidden fade-in">
+            <div id="quizContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentLesson = 0;
+        let completedLessons = JSON.parse(localStorage.getItem('completedLessons') || '[]');
+        let currentSection = 0;
+        let lessonSections = [];
+        let currentQuiz = null;
+        let currentQuestionIndex = 0;
+        let quizScore = 0;
+
+        // Text-to-Speech function
+        function speak(text, lang = 'ko-KR') {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = lang;
+                utterance.rate = 0.8;
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        // Create speak button
+        function createSpeakButton(text, lang = 'ko-KR') {
+            return `<button onclick="speak('${text}', '${lang}')" class="speak-btn ml-2 p-1 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-600">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.617.816L4.846 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.846l3.537-3.816a1 1 0 011.617.816zM16 8a2 2 0 11-4 0 2 2 0 014 0zm-2 6a4 4 0 100-8 4 4 0 000 8z" clip-rule="evenodd"></path>
+                </svg>
+            </button>`;
+        }
+
+        // Update progress
+        function updateProgress() {
+            const progress = (completedLessons.length / 15) * 100;
+            document.getElementById('overallProgress').textContent = Math.round(progress) + '%';
+            document.getElementById('progressBar').style.width = progress + '%';
+            
+            // Update lesson status indicators
+            document.querySelectorAll('.lesson-status').forEach(status => {
+                const lessonNum = parseInt(status.dataset.lesson);
+                if (completedLessons.includes(lessonNum)) {
+                    status.classList.remove('bg-gray-200');
+                    status.classList.add('bg-green-500');
+                    status.innerHTML = '<svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>';
+                }
+            });
+        }
+
+        // Mark lesson as complete
+        function completeLesson(lessonNum) {
+            if (!completedLessons.includes(lessonNum)) {
+                completedLessons.push(lessonNum);
+                localStorage.setItem('completedLessons', JSON.stringify(completedLessons));
+                updateProgress();
+            }
+        }
+
+        // Navigation functions
+        function showHome() {
+            document.getElementById('homeScreen').classList.remove('hidden');
+            document.getElementById('lessonScreen').classList.add('hidden');
+            document.getElementById('quizScreen').classList.add('hidden');
+            document.getElementById('backBtn').classList.add('hidden');
+            currentLesson = 0;
+        }
+
+        function showLesson() {
+            document.getElementById('homeScreen').classList.add('hidden');
+            document.getElementById('lessonScreen').classList.remove('hidden');
+            document.getElementById('quizScreen').classList.add('hidden');
+            document.getElementById('backBtn').classList.remove('hidden');
+        }
+
+        function showQuiz() {
+            document.getElementById('homeScreen').classList.add('hidden');
+            document.getElementById('lessonScreen').classList.add('hidden');
+            document.getElementById('quizScreen').classList.remove('hidden');
+            document.getElementById('backBtn').classList.remove('hidden');
+        }
+
+        // Quiz data for each lesson
+        const quizData = {
+    1: {
+        title: "Hangeul Quiz",
+        questions: [
+            {
+                question: "What sound does 'ㅏ' make?",
+                options: ["o", "u", "a", "i"],
+                correct: 2,
+                //korean: "ㅏ"
+            },
+            {
+                question: "What is the correct romanization of 'ㅗ'?",
+                options: ["a", "u", "e", "o"],
+                correct: 3,
+                //korean: "ㅗ"
+            },
+            {
+                question: "What consonant sound does 'ㄱ' make?",
+                options: ["n", "s", "g/k", "m"],
+                correct: 2,
+                //korean: "ㄱ"
+            },
+            {
+                question: "How do you write the syllable 'ga'?",
+                options: ["고", "구", "가", "기"],
+                correct: 2,
+                //korean: "가"
+            },
+            {
+                question: "Which of these is a double consonant?",
+                options: ["ㅈ", "ㅅ", "ㅃ", "ㅁ"],
+                correct: 2,
+                //korean: "ㅃ"
+            },
+            {
+                question: "What sound does 'ㅣ' make?",
+                options: ["a", "i", "o", "u"],
+                correct: 1,
+                //korean: "ㅣ"
+            },
+            {
+                question: "What is the romanization for 'ㅊ'?",
+                options: ["ch", "j", "c", "t"],
+                correct: 0,
+                //korean: "ㅊ"
+            },
+            {
+                question: "How do you write 'u'?",
+                options: ["ㅏ", "ㅓ", "ㅜ", "ㅗ"],
+                correct: 2,
+                //korean: "ㅜ"
+            },
+            {
+                question: "What is the sound of 'ㅁ'?",
+                options: ["n", "m", "l", "r"],
+                correct: 1,
+                //korean: "ㅁ"
+            },
+            {
+                question: "Which character sounds like 'eu'?",
+                options: ["ㅣ", "ㅡ", "ㅗ", "ㅜ"],
+                correct: 1,
+                //korean: "ㅡ"
+            },
+            {
+                question: "What is 'h' in Hangeul?",
+                options: ["ㅁ", "ㅂ", "ㅎ", "ㅍ"],
+                correct: 2,
+                //korean: "ㅎ"
+            },
+            {
+                question: "Which one is 'e'?",
+                options: ["ㅔ", "ㅐ", "ㅚ", "ㅟ"],
+                correct: 0,
+                //korean: "ㅔ"
+            },
+            {
+                question: "What is the sound for 'ㅅ'?",
+                options: ["s", "z", "sh", "ch"],
+                correct: 0,
+                //korean: "ㅅ"
+            },
+            {
+                question: "Which vowel is 'o' (long) sound?",
+                options: ["ㅏ", "ㅓ", "ㅗ", "ㅜ"],
+                correct: 2,
+                //korean: "ㅗ"
+            },
+            {
+                question: "How do you write 'eom-ma' (mother)?",
+                options: ["아빠", "엄마", "친구", "가족"],
+                correct: 1,
+                //korean: "엄마"
+            },
+            {
+                question: "What is the sound of 'ㅇ' when it's a first consonant?",
+                options: ["ng", "g", "k", "silent"],
+                correct: 3,
+                //korean: "ㅇ"
+            },
+            {
+                question: "What is 'p' in Hangeul?",
+                options: ["ㅂ", "ㅍ", "ㅃ", "ㅁ"],
+                correct: 1,
+                //korean: "ㅍ"
+            },
+            {
+                question: "Which character represents 'yeo'?",
+                options: ["야", "여", "요", "유"],
+                correct: 1,
+                //korean: "여"
+            },
+            {
+                question: "Which character is the double of 'ㅅ'?",
+                options: ["ㅆ", "ㅅ", "ㄲ", "ㅃ"],
+                correct: 0,
+                //korean: "ㅆ"
+            },
+            {
+                question: "What is the romanization for 'ㅌ'?",
+                options: ["p", "t", "d", "c"],
+                correct: 1,
+                //korean: "ㅌ"
+            }
+        ]
+    },
+    2: {
+        title: "The '이다' Verb Quiz",
+        questions: [
+            {
+                question: "What does '이다' mean?",
+                options: ["to eat", "to be", "to go", "to do"],
+                correct: 1,
+                //korean: "이다"
+            },
+            {
+                question: "What is the most common polite form of '이다'?",
+                options: ["-입니다", "-예요", "-이다", "-이에요"],
+                correct: 2,
+                //korean: "이에요"
+            },
+            {
+                question: "Which form is used after a noun ending in a consonant?",
+                options: ["이에요", "예요", "입니다", "다"],
+                correct: 0,
+                //korean: "이에요"
+            },
+            {
+                question: "Which form is used after a noun ending in a vowel?",
+                options: ["이에요", "예요", "입니다", "다"],
+                correct: 1,
+                //korean: "예요"
+            },
+            {
+                question: "What is the informal past tense of '이다'?",
+                options: ["이었어요", "였어요", "였다", "였습니다"],
+                correct: 0,
+                //korean: "이었어요"
+            },
+            {
+                question: "How would you say 'I am a student' politely and informally?",
+                options: ["저는 학생이에요", "저는 학생입니다", "나는 학생이다", "학생"],
+                correct: 0,
+                //korean: "학생이에요"
+            },
+            {
+                question: "Complete the sentence: '이것은 책___'",
+                options: ["예요", "이에요", "입니다", "이다"],
+                correct: 1,
+                //korean: "책이에요"
+            },
+            {
+                question: "Complete the sentence: '그것은 사과___'",
+                options: ["예요", "이에요", "입니다", "이다"],
+                correct: 0,
+                //korean: "사과예요"
+            },
+            {
+                question: "What is the formal past tense of '이다'?",
+                options: ["이었어요", "였어요", "이었다", "였습니다"],
+                correct: 3,
+                //korean: "였습니다"
+            },
+            {
+                question: "How would you say 'This is a table' in a formal way?",
+                options: ["이것은 탁자예요", "이것은 탁자입니다", "이것은 탁자였다", "탁자"],
+                correct: 1,
+                //korean: "탁자입니다"
+            },
+            {
+                question: "How do you form the negative form of '이다'?",
+                options: ["-이지 않다", "-이지 않다/-가 아니다", "-이에요", "-이에요"],
+                correct: 1,
+                //korean: "아니다"
+            },
+            {
+                question: "What is the negative of '학생입니다'?",
+                options: ["학생이 아닙니다", "학생이에요", "학생이 있었다", "학생을"],
+                correct: 0,
+                //korean: "학생이 아닙니다"
+            },
+            {
+                question: "Which of the following is an honorific form of '이다'?",
+                options: ["이세요", "이었어요", "입니다", "이에요"],
+                correct: 0,
+                //korean: "이세요"
+            },
+            {
+                question: "Complete the sentence: '선생님은 한국 사람___'",
+                options: ["이에요", "입니다", "이세요", "예요"],
+                correct: 2,
+                //korean: "이세요"
+            },
+            {
+                question: "What is the future tense of '이다'?",
+                options: ["일 거예요", "일 것이다", "였어요", "입니다"],
+                correct: 0,
+                //korean: "일 거예요"
+            },
+            {
+                question: "How would you say 'It will be a big building'?",
+                options: ["큰 건물이었어요", "큰 건물입니다", "큰 건물이에요", "큰 건물일 거예요"],
+                correct: 3,
+                //korean: "건물일 거예요"
+            },
+            {
+                question: "The verb '이다' is a(n) _____ verb.",
+                options: ["action", "descriptive", "copula", "auxiliary"],
+                correct: 2,
+                //korean: "계사"
+            },
+            {
+                question: "What is the informal non-polite form of '이다'?",
+                options: ["입니다", "이에요", "이다", "예요"],
+                correct: 2,
+                //korean: "이다"
+            },
+            {
+                question: "Which form of '이다' is used to ask a question?",
+                options: ["이에요?", "이에요", "입니다", "예요"],
+                correct: 0,
+                //korean: "이에요?"
+            },
+            {
+                question: "How would you ask 'Are you a student?' formally?",
+                options: ["학생이에요?", "학생입니까?", "학생이세요?", "학생이냐?"],
+                correct: 1,
+                //korean: "학생입니까?"
+            }
+        ]
+    },
+    3: {
+        title: "Korean Numbers Quiz",
+        questions: [
+            {
+                question: "What is '5' in Native Korean?",
+                options: ["오", "다섯", "일곱", "스물"],
+                correct: 1,
+                //korean: "다섯"
+            },
+            {
+                question: "What is '10' in Sino-Korean?",
+                options: ["하나", "열", "십", "다섯"],
+                correct: 2,
+                //korean: "십"
+            },
+            {
+                question: "Which number system is used for counting objects?",
+                options: ["Native Korean", "Sino-Korean", "Both", "Neither"],
+                correct: 0,
+                //korean: "고유어"
+            },
+            {
+                question: "What is '100' in Sino-Korean?",
+                options: ["백", "천", "만", "억"],
+                correct: 0,
+                //korean: "백"
+            },
+            {
+                question: "Which number system is used for phone numbers?",
+                options: ["Native Korean", "Sino-Korean", "Both", "Neither"],
+                correct: 1,
+                //korean: "한자어"
+            },
+            {
+                question: "What is '20' in Native Korean?",
+                options: ["이십", "스물", "서른", "열"],
+                correct: 1,
+                //korean: "스물"
+            },
+            {
+                question: "How do you say '30' in Sino-Korean?",
+                options: ["삼십", "서른", "삼백", "서른개"],
+                correct: 0,
+                //korean: "삼십"
+            },
+            {
+                question: "Which is used for prices?",
+                options: ["Native Korean", "Sino-Korean", "Both", "Neither"],
+                correct: 1,
+                //korean: "한자어"
+            },
+            {
+                question: "What is '1' in Native Korean?",
+                options: ["일", "하나", "한", "하나개"],
+                correct: 1,
+                //korean: "하나"
+            },
+            {
+                question: "What is '100,000,000' in Sino-Korean?",
+                options: ["만", "천", "백", "억"],
+                correct: 3,
+                //korean: "억"
+            },
+            {
+                question: "What is '2' in Native Korean?",
+                options: ["이", "둘", "두", "둘개"],
+                correct: 1,
+                //korean: "둘"
+            },
+            {
+                question: "How do you say '40' in Sino-Korean?",
+                options: ["사십", "마흔", "사백", "사천"],
+                correct: 0,
+                //korean: "사십"
+            },
+            {
+                question: "Which number system is used for counting hours?",
+                options: ["Native Korean", "Sino-Korean", "Both", "Neither"],
+                correct: 0,
+                //korean: "고유어"
+            },
+            {
+                question: "What is '50' in Native Korean?",
+                options: ["오십", "쉰", "오백", "오천"],
+                correct: 1,
+                //korean: "쉰"
+            },
+            {
+                question: "What is '6' in Sino-Korean?",
+                options: ["여섯", "육", "일곱", "칠"],
+                correct: 1,
+                //korean: "육"
+            },
+            {
+                question: "What is '1,000' in Sino-Korean?",
+                options: ["백", "천", "만", "십"],
+                correct: 1,
+                //korean: "천"
+            },
+            {
+                question: "What is '8' in Native Korean?",
+                options: ["여덟", "여덟개", "팔", "팔개"],
+                correct: 0,
+                //korean: "여덟"
+            },
+            {
+                question: "Which number system is used for years?",
+                options: ["Native Korean", "Sino-Korean", "Both", "Neither"],
+                correct: 1,
+                //korean: "한자어"
+            },
+            {
+                question: "What is '10,000' in Sino-Korean?",
+                options: ["만", "억", "백만", "천만"],
+                correct: 0,
+                //korean: "만"
+            },
+            {
+                question: "Which of these is a Native Korean number?",
+                options: ["삼", "오", "육", "일곱"],
+                correct: 3,
+                //korean: "일곱"
+            }
+        ]
+    },
+    4: {
+        title: "Telling Time Quiz",
+        questions: [
+            {
+                question: "Which number system is used for the hour?",
+                options: ["Sino-Korean", "Native Korean", "Both", "Neither"],
+                correct: 1,
+                //korean: "고유어"
+            },
+            {
+                question: "Which number system is used for the minute?",
+                options: ["Sino-Korean", "Native Korean", "Both", "Neither"],
+                correct: 0,
+                //korean: "한자어"
+            },
+            {
+                question: "How do you say '4 o'clock'?",
+                options: ["사 시", "네 시", "네시", "사시"],
+                correct: 1,
+                //korean: "네 시"
+            },
+            {
+                question: "How do you say '9 o'clock'?",
+                options: ["아홉 시", "아홉시", "구 시", "구시"],
+                correct: 0,
+                //korean: "아홉 시"
+            },
+            {
+                question: "What does '분' mean?",
+                options: ["hour", "minute", "second", "day"],
+                correct: 1,
+                //korean: "분"
+            },
+            {
+                question: "How do you say '10 minutes'?",
+                options: ["열 분", "십 분", "십분", "열분"],
+                correct: 1,
+                //korean: "십 분"
+            },
+            {
+                question: "What does 'AM' translate to?",
+                options: ["오전", "오후", "낮", "밤"],
+                correct: 0,
+                //korean: "오전"
+            },
+            {
+                question: "What does 'PM' translate to?",
+                options: ["오전", "오후", "낮", "밤"],
+                correct: 1,
+                //korean: "오후"
+            },
+            {
+                question: "How do you say '6:05'?",
+                options: ["여섯 시 오 분", "육 시 오 분", "여섯 시 다섯 분", "육 시 다섯 분"],
+                correct: 0,
+                //korean: "여섯 시 오 분"
+            },
+            {
+                question: "How do you ask 'What time is it?'",
+                options: ["몇 시예요?", "몇시?", "언제?", "시간이 있어요?"],
+                correct: 0,
+                //korean: "몇 시예요?"
+            },
+            {
+                question: "What is '30 minutes' called?",
+                options: ["삼십분", "반", "서른 분", "Both A and B"],
+                correct: 3,
+                //korean: "삼십분"
+            },
+            {
+                question: "How would you say 'It's 12:30 PM'?",
+                options: ["오전 열두 시 삼십 분", "오후 열두 시 삼십 분", "오후 열두 시 반", "Both B and C"],
+                correct: 3,
+                //korean: "오후 열두 시 반"
+            },
+            {
+                question: "Which of these is the correct way to say '1 o'clock'?",
+                options: ["일 시", "한 시", "하나 시", "한 시개"],
+                correct: 1,
+                //korean: "한 시"
+            },
+            {
+                question: "What does '시간' mean?",
+                options: ["a specific time", "duration", "minute", "hour"],
+                correct: 3,
+                //korean: "시간"
+            },
+            {
+                question: "How would you say '2 o'clock'?",
+                options: ["둘 시", "이 시", "두 시", "두시"],
+                correct: 2,
+                //korean: "두 시"
+            },
+            {
+                question: "How would you say '7:45'?",
+                options: ["일곱 시 사십오 분", "칠 시 사십오 분", "일곱 시 사오 분", "일곱 시 사십 다섯 분"],
+                correct: 0,
+                //korean: "일곱 시 사십오 분"
+            },
+            {
+                question: "How would you say '8:15'?",
+                options: ["여덟 시 십오 분", "팔 시 십오 분", "여덟 시 십오분", "팔 시 십오분"],
+                correct: 0,
+                //korean: "여덟 시 십오 분"
+            },
+            {
+                question: "What is the term for a specific time like 1:00, 2:00, etc.?",
+                options: ["시간", "시", "분", "초"],
+                correct: 1,
+                //korean: "시"
+            },
+            {
+                question: "How would you say '11:00 AM'?",
+                options: ["오전 열한 시", "오전 십일 시", "오후 열한 시", "오전 열하나 시"],
+                correct: 0,
+                //korean: "오전 열한 시"
+            },
+            {
+                question: "What is the word for 'second'?",
+                options: ["시", "분", "초", "시간"],
+                correct: 2,
+                //korean: "초"
+            }
+        ]
+    },
+    5: {
+        title: "Telling Date Quiz",
+        questions: [
+            {
+                question: "What is 'Sunday' in Korean?",
+                options: ["월요일", "화요일", "일요일", "토요일"],
+                correct: 2,
+                //korean: "일요일"
+            },
+            {
+                question: "What is 'Tuesday' in Korean?",
+                options: ["월요일", "화요일", "수요일", "목요일"],
+                correct: 1,
+                //korean: "화요일"
+            },
+            {
+                question: "What does '오늘' mean?",
+                options: ["yesterday", "tomorrow", "today", "day after tomorrow"],
+                correct: 2,
+                //korean: "오늘"
+            },
+            {
+                question: "What does '어제' mean?",
+                options: ["today", "tomorrow", "yesterday", "last week"],
+                correct: 2,
+                //korean: "어제"
+            },
+            {
+                question: "How do you say 'next week'?",
+                options: ["이번 주", "지난 주", "다음 주", "다다음 주"],
+                correct: 2,
+                //korean: "다음 주"
+            },
+            {
+                question: "What is 'January' in Korean?",
+                options: ["일월", "이월", "삼월", "사월"],
+                correct: 0,
+                //korean: "일월"
+            },
+            {
+                question: "How do you say 'May' in Korean?",
+                options: ["오월", "오 월", "유월", "육월"],
+                correct: 0,
+                //korean: "오월"
+            },
+            {
+                question: "What is the word for 'month'?",
+                options: ["년", "월", "일", "주"],
+                correct: 1,
+                //korean: "월"
+            },
+            {
+                question: "What does '주' mean?",
+                options: ["year", "month", "week", "day"],
+                correct: 2,
+                //korean: "주"
+            },
+            {
+                question: "How do you say 'April'?",
+                options: ["사월", "오월", "육월", "사 월"],
+                correct: 0,
+                //korean: "사월"
+            },
+            {
+                question: "What is 'Saturday' in Korean?",
+                options: ["금요일", "토요일", "일요일", "수요일"],
+                correct: 1,
+                //korean: "토요일"
+            },
+            {
+                question: "How do you say 'last month'?",
+                options: ["이번 달", "지난 달", "다음 달", "다다음 달"],
+                correct: 1,
+                //korean: "지난 달"
+            },
+            {
+                question: "How do you say 'this year'?",
+                options: ["작년", "내년", "올해", "내년"],
+                correct: 2,
+                //korean: "올해"
+            },
+            {
+                question: "How do you say 'day'?",
+                options: ["일", "년", "월", "주"],
+                correct: 0,
+                //korean: "일"
+            },
+            {
+                question: "What is 'December' in Korean?",
+                options: ["십월", "십일월", "십이월", "시월"],
+                correct: 2,
+                //korean: "십이월"
+            },
+            {
+                question: "How do you say 'tomorrow'?",
+                options: ["오늘", "어제", "내일", "모레"],
+                correct: 2,
+                //korean: "내일"
+            },
+            {
+                question: "What does '모레' mean?",
+                options: ["yesterday", "tomorrow", "day after tomorrow", "today"],
+                correct: 2,
+                //korean: "모레"
+            },
+            {
+                question: "What is the word for 'date'?",
+                options: ["날짜", "요일", "주", "시간"],
+                correct: 0,
+                //korean: "날짜"
+            },
+            {
+                question: "Which of these is the correct way to write the date '2023.1.25'?",
+                options: ["이천이십삼년 일월 이십오일", "이천이십삼년 일월 이십오일", "이천이십삼년 일월 이십오 일", "이천이십삼년 일월 이십오일"],
+                correct: 0,
+                //korean: "2023년 1월 25일"
+            },
+            {
+                question: "What is the word for 'year'?",
+                options: ["월", "일", "년", "주"],
+                correct: 2,
+                //korean: "년"
+            }
+        ]
+    },
+    6: {
+        title: "Korean Counters Quiz",
+        questions: [
+            {
+                question: "What counter is used for people?",
+                options: ["개", "명", "마리", "권"],
+                correct: 1,
+                //korean: "명"
+            },
+            {
+                question: "What counter is used for animals?",
+                options: ["개", "명", "마리", "권"],
+                correct: 2,
+                //korean: "마리"
+            },
+            {
+                question: "How do you say 'one book'?",
+                options: ["한 권", "하나 권", "일 권", "한개 책"],
+                correct: 0,
+                //korean: "한 권"
+            },
+            {
+                question: "What happens to '둘' before a counter?",
+                options: ["stays same", "becomes 두", "becomes 이", "becomes 둘개"],
+                correct: 1,
+                //korean: "두"
+            },
+            {
+                question: "What counter is used for bottles?",
+                options: ["개", "잔", "병", "장"],
+                correct: 2,
+                //korean: "병"
+            },
+            {
+                question: "Which is the counter for paper or tickets?",
+                options: ["개", "잔", "병", "장"],
+                correct: 3,
+                //korean: "장"
+            },
+            {
+                question: "What is the counter for cups or glasses?",
+                options: ["개", "잔", "병", "장"],
+                correct: 1,
+                //korean: "잔"
+            },
+            {
+                question: "What is the most general counter for objects?",
+                options: ["개", "명", "마리", "권"],
+                correct: 0,
+                //korean: "개"
+            },
+            {
+                question: "How do you say 'five cars'?",
+                options: ["다섯 차", "다섯 대", "오 대", "오 차"],
+                correct: 1,
+                //korean: "다섯 대"
+            },
+            {
+                question: "Which is the counter for machines or vehicles?",
+                options: ["개", "마리", "대", "채"],
+                correct: 2,
+                //korean: "대"
+            },
+            {
+                question: "How do you say 'three trees'?",
+                options: ["세 그루", "삼 그루", "세 나무", "삼 나무"],
+                correct: 0,
+                //korean: "세 그루"
+            },
+            {
+                question: "What is the counter for trees?",
+                options: ["그루", "개", "병", "마리"],
+                correct: 0,
+                //korean: "그루"
+            },
+            {
+                question: "How do you say 'four people'?",
+                options: ["넷 사람", "네 명", "사 사람", "네 사람"],
+                correct: 1,
+                //korean: "네 명"
+            },
+            {
+                question: "What happens to '스물' before a counter?",
+                options: ["stays same", "becomes 스무", "becomes 이십", "becomes 스물개"],
+                correct: 1,
+                //korean: "스무"
+            },
+            {
+                question: "What is the counter for houses?",
+                options: ["채", "집", "개", "마리"],
+                correct: 0,
+                //korean: "채"
+            },
+            {
+                question: "How do you say '10 cats'?",
+                options: ["열 마리 고양이", "열 고양이", "십 마리 고양이", "십 고양이"],
+                correct: 0,
+                //korean: "열 마리"
+            },
+            {
+                question: "What is the counter for pieces of clothing?",
+                options: ["벌", "개", "장", "대"],
+                correct: 0,
+                //korean: "벌"
+            },
+            {
+                question: "How would you say 'one shirt'?",
+                options: ["한 벌", "하나 벌", "일 벌", "한개 벌"],
+                correct: 0,
+                //korean: "한 벌"
+            },
+            {
+                question: "What is the counter for flowers?",
+                options: ["개", "송이", "마리", "다발"],
+                correct: 1,
+                //korean: "송이"
+            },
+            {
+                question: "What is the counter for bowls or meals?",
+                options: ["개", "그릇", "잔", "병"],
+                correct: 1,
+                //korean: "그릇"
+            }
+        ]
+    },
+    7: {
+        title: "Verb and Adjective Conjunction Quiz",
+        questions: [
+            {
+                question: "What is the basic, dictionary form of a verb/adjective?",
+                options: ["-요", "-다", "-었", "-겠"],
+                correct: 1,
+                //korean: "-다"
+            },
+            {
+                question: "How do you form the polite present tense (A/V +아요/어요)?",
+                options: ["remove -다 and add -아요/어요", "add -요 to the end", "add -습니다 to the end", "remove -다 and add -어요"],
+                correct: 0,
+                //korean: "아요/어요"
+            },
+            {
+                question: "What is the polite present tense of '가다' (to go)?",
+                options: ["갔어요", "가요", "가습니다", "갔어요"],
+                correct: 1,
+                //korean: "가요"
+            },
+            {
+                question: "What is the polite present tense of '먹다' (to eat)?",
+                options: ["먹어요", "먹어요", "먹습니다", "먹다요"],
+                correct: 0,
+                //korean: "먹어요"
+            },
+            {
+                question: "How is the polite past tense formed?",
+                options: ["A/V +았어요/었어요", "A/V +았어요", "A/V +었어요", "A/V +았어요/었어요/했어요"],
+                correct: 3,
+                //korean: "았어요/었어요/했어요"
+            },
+            {
+                question: "What is the past tense of '보다' (to see)?",
+                options: ["봤어요", "봐요", "볼 거예요", "보다"],
+                correct: 0,
+                //korean: "봤어요"
+            },
+            {
+                question: "What is the past tense of '오다' (to come)?",
+                options: ["와요", "왔어요", "올 거예요", "왔어요"],
+                correct: 1,
+                //korean: "왔어요"
+            },
+            {
+                question: "How is the future tense formed?",
+                options: ["A/V +을 거예요/ㄹ 거예요", "A/V + 거예요", "A/V +겠", "A/V +을거예요"],
+                correct: 0,
+                //korean: "을 거예요/ㄹ 거예요"
+            },
+            {
+                question: "What is the future tense of '하다' (to do)?",
+                options: ["했어요", "할 거예요", "해요", "하다"],
+                correct: 1,
+                //korean: "할 거예요"
+            },
+            {
+                question: "What is the future tense of '먹다'?",
+                options: ["먹을 거예요", "먹었어요", "먹어요", "먹다"],
+                correct: 0,
+                //korean: "먹을 거예요"
+            },
+            {
+                question: "Which ending is for the informal non-polite form?",
+                options: ["-요", "-다", "-어/아", "-습니다"],
+                correct: 2,
+                //korean: "어/아"
+            },
+            {
+                question: "What is the informal non-polite form of '가다'?",
+                options: ["가", "가요", "갔다", "간다"],
+                correct: 0,
+                //korean: "가"
+            },
+            {
+                question: "What is the most formal present tense ending?",
+                options: ["-아요/-어요", "-습니다/-ㅂ니다", "-어/아", "-다"],
+                correct: 1,
+                //korean: "습니다/ㅂ니다"
+            },
+            {
+                question: "What is the formal present tense of '먹다'?",
+                options: ["먹어요", "먹습니다", "먹다", "먹을 거예요"],
+                correct: 1,
+                //korean: "먹습니다"
+            },
+            {
+                question: "What is the formal present tense of '가다'?",
+                options: ["갑니다", "가요", "가습니다", "가다"],
+                correct: 0,
+                //korean: "갑니다"
+            },
+            {
+                question: "Which of these is the polite imperative form?",
+                options: ["-으세요/-세요", "-으십니다/-십니다", "-아라", "-어라"],
+                correct: 0,
+                //korean: "-으세요/-세요"
+            },
+            {
+                question: "How do you say 'Please eat' politely?",
+                options: ["먹으세요", "먹습니다", "먹어", "드세요"],
+                correct: 3,
+                //korean: "드세요"
+            },
+            {
+                question: "What is the polite form of '크다' (to be big)?",
+                options: ["커요", "크어요", "크습니다", "크다요"],
+                correct: 0,
+                //korean: "커요"
+            },
+            {
+                question: "What is the polite form of '바쁘다' (to be busy)?",
+                options: ["바빠요", "바쁘세요", "바쁘어요", "바쁩니다"],
+                correct: 0,
+                //korean: "바빠요"
+            },
+            {
+                question: "Which ending is used for questions in polite informal style?",
+                options: ["-습니다?", "-어요?", "-어요", "-ㅂ니까?"],
+                correct: 1,
+                //korean: "-어요?"
+            }
+        ]
+    },
+    13: {
+        title: "Location and Direction Quiz",
+        questions: [
+            {
+                question: "What particle indicates a place of existence?",
+                options: ["-에", "-에서", "-으로", "-부터"],
+                correct: 0,
+                //korean: "-에"
+            },
+            {
+                question: "What particle indicates a place where an action occurs?",
+                options: ["-에", "-에서", "-으로", "-까지"],
+                correct: 1,
+                //korean: "-에서"
+            },
+            {
+                question: "How do you say 'in front of'?",
+                options: ["뒤에", "옆에", "앞에", "위에"],
+                correct: 2,
+                //korean: "앞에"
+            },
+            {
+                question: "How do you say 'behind'?",
+                options: ["앞에", "뒤에", "옆에", "아래에"],
+                correct: 1,
+                //korean: "뒤에"
+            },
+            {
+                question: "What does '위에' mean?",
+                options: ["under", "inside", "on/above", "outside"],
+                correct: 2,
+                //korean: "위에"
+            },
+            {
+                question: "Which particle means 'to/toward'?",
+                options: ["-에", "-에서", "-으로/로", "-부터"],
+                correct: 2,
+                //korean: "-으로/로"
+            },
+            {
+                question: "How do you say 'to the right'?",
+                options: ["오른쪽으로", "왼쪽으로", "앞으로", "뒤로"],
+                correct: 0,
+                //korean: "오른쪽으로"
+            },
+            {
+                question: "How do you ask 'Where is it?'",
+                options: ["어디에 있어요?", "뭐예요?", "언제예요?", "어떻게 가요?"],
+                correct: 0,
+                //korean: "어디에 있어요?"
+            },
+            {
+                question: "What is the particle for 'from' a place?",
+                options: ["-에", "-에서", "-으로", "-부터"],
+                correct: 3,
+                //korean: "-부터"
+            },
+            {
+                question: "How do you say 'next to'?",
+                options: ["앞에", "뒤에", "옆에", "안에"],
+                correct: 2,
+                //korean: "옆에"
+            },
+            {
+                question: "What does '안에' mean?",
+                options: ["outside", "inside", "on", "under"],
+                correct: 1,
+                //korean: "안에"
+            },
+            {
+                question: "How do you say 'under'?",
+                options: ["위에", "아래에", "안에", "밖에"],
+                correct: 1,
+                //korean: "아래에"
+            },
+            {
+                question: "Which of these is used for a destination?",
+                options: ["-에", "-에서", "-으로", "-부터"],
+                correct: 0,
+                //korean: "-에"
+            },
+            {
+                question: "How do you say 'I am at home'?",
+                options: ["집에 가요", "집에서 먹어요", "집에 있어요", "집으로 가요"],
+                correct: 2,
+                //korean: "집에 있어요"
+            },
+            {
+                question: "How do you say 'I study at school'?",
+                options: ["학교에 가요", "학교에서 공부해요", "학교에 있어요", "학교로 가요"],
+                correct: 1,
+                //korean: "학교에서 공부해요"
+            },
+            {
+                question: "What does '밖에' mean?",
+                options: ["inside", "outside", "between", "up"],
+                correct: 1,
+                //korean: "밖에"
+            },
+            {
+                question: "How do you say 'upstairs'?",
+                options: ["아래층", "위층", "아래", "위"],
+                correct: 1,
+                //korean: "위층"
+            },
+            {
+                question: "What does '사이' mean?",
+                options: ["next to", "in front of", "behind", "between"],
+                correct: 3,
+                //korean: "사이"
+            },
+            {
+                question: "How do you say 'to the left'?",
+                options: ["오른쪽으로", "왼쪽으로", "앞으로", "뒤로"],
+                correct: 1,
+                //korean: "왼쪽으로"
+            },
+            {
+                question: "How do you say 'go straight'?",
+                options: ["돌아가세요", "직진하세요", "왼쪽으로 가세요", "오른쪽으로 가세요"],
+                correct: 1,
+                //korean: "직진하세요"
+            }
+        ]
+    },
+    15: {
+        title: "Basic Sentence Structure Quiz",
+        questions: [
+            {
+                question: "What is the typical Korean word order?",
+                options: ["Subject-Verb-Object (SVO)", "Subject-Object-Verb (SOV)", "Verb-Subject-Object (VSO)", "Object-Subject-Verb (OSV)"],
+                correct: 1,
+                //korean: "SOV"
+            },
+            {
+                question: "What particle marks the subject of a sentence?",
+                options: ["-은/-는", "-이/-가", "-을/-를", "-에/-에서"],
+                correct: 1,
+                //korean: "-이/-가"
+            },
+            {
+                question: "What particle marks the object of a sentence?",
+                options: ["-은/-는", "-이/-가", "-을/-를", "-에/-에서"],
+                correct: 2,
+                //korean: "-을/-를"
+            },
+            {
+                question: "Which particle is used to indicate the topic?",
+                options: ["-은/-는", "-이/-가", "-을/-를", "-에/-에서"],
+                correct: 0,
+                //korean: "-은/-는"
+            },
+            {
+                question: "In the sentence '나는 책을 읽어요', what does '나는' mark?",
+                options: ["the subject", "the object", "the topic", "the location"],
+                correct: 2,
+                //korean: "나는"
+            },
+            {
+                question: "What does the particle '-도' mean?",
+                options: ["and", "also/too", "but", "or"],
+                correct: 1,
+                //korean: "-도"
+            },
+            {
+                question: "How do you say 'I am a student' using the topic marker?",
+                options: ["내가 학생입니다", "나도 학생입니다", "나는 학생입니다", "나 학생"],
+                correct: 2,
+                //korean: "나는 학생입니다"
+            },
+            {
+                question: "What is the function of particles in Korean?",
+                options: ["They change verb tenses", "They connect clauses", "They mark the role of each noun in a sentence", "They are used for questions only"],
+                correct: 2,
+                //korean: "조사"
+            },
+            {
+                question: "How would you ask 'What is this?'?",
+                options: ["이것이 뭐예요?", "이것은 뭐예요?", "이것을 뭐예요?", "Both A and B"],
+                correct: 3,
+                //korean: "이것은 뭐예요?"
+            },
+            {
+                question: "How do you say 'I eat bread'?",
+                options: ["저는 빵을 먹어요", "저는 빵이 먹어요", "저는 빵 먹어요", "나는 빵을 먹는다"],
+                correct: 0,
+                //korean: "빵을 먹어요"
+            },
+            {
+                question: "In the sentence '친구가 집에 가요', what does '친구' mean?",
+                options: ["teacher", "friend", "family", "student"],
+                correct: 1,
+                //korean: "친구"
+            },
+            {
+                question: "What is the word for 'and' when connecting nouns?",
+                options: ["-랑/-이랑", "-도", "-지만", "-고"],
+                correct: 0,
+                //korean: "-랑/-이랑"
+            },
+            {
+                question: "What is the word for 'but'?",
+                options: ["-고", "-지만", "-도", "-랑"],
+                correct: 1,
+                //korean: "-지만"
+            },
+            {
+                question: "What is the Korean word for 'verb'?",
+                options: ["동사", "형용사", "명사", "부사"],
+                correct: 0,
+                //korean: "동사"
+            },
+            {
+                question: "What is the Korean word for 'adjective'?",
+                options: ["동사", "형용사", "명사", "부사"],
+                correct: 1,
+                //korean: "형용사"
+            },
+            {
+                question: "What is the word for 'noun'?",
+                options: ["명사", "대명사", "동사", "형용사"],
+                correct: 0,
+                //korean: "명사"
+            },
+            {
+                question: "Which particle should you use for 'I' when answering a question?",
+                options: ["-는", "-은", "-가", "-이"],
+                correct: 2,
+                //korean: "-가"
+            },
+            {
+                question: "In the sentence '나는 학생입니다', what is the role of the particle '-은'?",
+                options: ["Subject marker", "Object marker", "Topic marker", "Location marker"],
+                correct: 2,
+                //korean: "은/는"
+            },
+            {
+                question: "How do you say 'I' in Korean?",
+                options: ["나", "저", "둘 다", "둘 다 아님"],
+                correct: 2,
+                //korean: "나/저"
+            },
+            {
+                question: "What is the object in the sentence '나는 사과를 먹어요'?",
+                options: ["나", "사과", "먹어요", "를"],
+                correct: 1,
+                //korean: "사과"
+            }
+        ]
+    }
+};
+
+        // Quiz functions
+        function startQuiz(lessonNum) {
+            currentQuiz = quizData[lessonNum];
+            currentQuestionIndex = 0;
+            quizScore = 0;
+            showQuiz();
+            displayQuestion();
+        }
+
+        function displayQuestion() {
+            const question = currentQuiz.questions[currentQuestionIndex];
+            const totalQuestions = currentQuiz.questions.length;
+            
+            document.getElementById('quizContent').innerHTML = `
+                <div class="space-y-6">
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-2xl font-bold text-gray-800">${currentQuiz.title}</h2>
+                            <span class="text-sm text-gray-600">${currentQuestionIndex + 1}/${totalQuestions}</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2 mb-6">
+                            <div class="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full transition-all duration-300" style="width: ${((currentQuestionIndex + 1) / totalQuestions) * 100}%"></div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <div class="text-center mb-6">
+                            ${question.korean ? `<div class="text-4xl korean-text font-bold mb-4">${question.korean} ${createSpeakButton(question.korean)}</div>` : ''}
+                            <h3 class="text-xl font-semibold text-gray-800">${question.question}</h3>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            ${question.options.map((option, index) => `
+                                <button onclick="selectAnswer(${index})" class="quiz-option w-full p-4 text-left bg-gray-50 hover:bg-gray-100 rounded-xl border-2 border-transparent transition-all">
+                                    <span class="font-medium">${option}</span>
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function selectAnswer(selectedIndex) {
+            const question = currentQuiz.questions[currentQuestionIndex];
+            const options = document.querySelectorAll('.quiz-option');
+            
+            // Disable all options
+            options.forEach(option => option.classList.add('disabled'));
+            
+            // Show correct/incorrect
+            options[selectedIndex].classList.add(selectedIndex === question.correct ? 'correct' : 'incorrect');
+            if (selectedIndex !== question.correct) {
+                options[question.correct].classList.add('correct');
+            }
+            
+            // Update score
+            if (selectedIndex === question.correct) {
+                quizScore++;
+            }
+            
+            // Show next button after 1 second
+            setTimeout(() => {
+                const nextButton = document.createElement('button');
+                nextButton.className = 'w-full mt-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 rounded-xl font-semibold';
+                nextButton.textContent = currentQuestionIndex < currentQuiz.questions.length - 1 ? 'Next Question' : 'Show Results';
+                nextButton.onclick = nextQuestion;
+                document.querySelector('#quizContent .space-y-3').parentNode.appendChild(nextButton);
+            }, 1000);
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < currentQuiz.questions.length) {
+                displayQuestion();
+            } else {
+                showQuizResults();
+            }
+        }
+
+        function showQuizResults() {
+            const percentage = Math.round((quizScore / currentQuiz.questions.length) * 100);
+            const passed = percentage >= 70;
+            
+            document.getElementById('quizContent').innerHTML = `
+                <div class="space-y-6">
+                    <div class="bg-white rounded-xl p-6 shadow-lg text-center">
+                        <div class="text-6xl mb-4">${passed ? '🎉' : '📚'}</div>
+                        <h2 class="text-2xl font-bold text-gray-800 mb-2">Quiz Complete!</h2>
+                        <div class="text-4xl font-bold mb-4 ${passed ? 'text-green-600' : 'text-orange-600'}">${quizScore}/${currentQuiz.questions.length}</div>
+                        <div class="text-xl font-semibold mb-4 ${passed ? 'text-green-600' : 'text-orange-600'}">${percentage}%</div>
+                        <p class="text-gray-600 mb-6">${passed ? 'Great job! You passed the quiz!' : 'Keep studying and try again!'}</p>
+                        
+                        <div class="space-y-3">
+                            <button onclick="startQuiz(${currentLesson})" class="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 rounded-xl font-semibold">
+                                Retake Quiz
+                            </button>
+                            <button onclick="showHome()" class="w-full bg-gray-200 text-gray-800 py-3 rounded-xl font-semibold">
+                                Back to Lessons
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            if (passed && !completedLessons.includes(currentLesson)) {
+                completeLesson(currentLesson);
+            }
+        }
+
+        // Lesson content generators (keeping existing functions and adding quiz buttons)
+        function generateLesson1() {
+            return `
+                <div class="space-y-6">
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-4 korean-text">한글 (Hangeul)</h2>
+                        <p class="text-gray-600 mb-4">The Korean writing system, created by King Sejong in 1443.</p>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Basic Vowels (기본 모음)</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            ${[
+                                ['ㅏ', 'a'], ['ㅓ', 'eo'], ['ㅗ', 'o'], ['ㅜ', 'u'], ['ㅡ', 'eu'],
+                                ['ㅣ', 'i'], ['ㅑ', 'ya'], ['ㅕ', 'yeo'], ['ㅛ', 'yo'], ['ㅠ', 'yu']
+                            ].map(([korean, roman]) => `
+                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                    <span class="text-2xl korean-text font-bold">${korean}</span>
+                                    <span class="text-gray-600">${roman}</span>
+                                    ${createSpeakButton(korean)}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Combined Vowels (복합 모음)</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            ${[
+                                ['ㅐ', 'ae'], ['ㅔ', 'e'], ['ㅒ', 'yae'], ['ㅖ', 'ye'], ['ㅘ', 'wa'],
+                                ['ㅙ', 'wae'], ['ㅚ', 'oe'], ['ㅝ', 'wo'], ['ㅞ', 'we'], ['ㅟ', 'wi'], ['ㅢ', 'ui']
+                            ].map(([korean, roman]) => `
+                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                    <span class="text-2xl korean-text font-bold">${korean}</span>
+                                    <span class="text-gray-600">${roman}</span>
+                                    ${createSpeakButton(korean)}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Basic Consonants (기본 자음)</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            ${[
+                                ['ㄱ', 'g/k'], ['ㄴ', 'n'], ['ㄷ', 'd/t'], ['ㄹ', 'r/l'], ['ㅁ', 'm'],
+                                ['ㅂ', 'b/p'], ['ㅅ', 's'], ['ㅇ', 'ng/silent'], ['ㅈ', 'j'], ['ㅊ', 'ch'],
+                                ['ㅋ', 'k'], ['ㅌ', 't'], ['ㅍ', 'p'], ['ㅎ', 'h']
+                            ].map(([korean, roman]) => `
+                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                    <span class="text-2xl korean-text font-bold">${korean}</span>
+                                    <span class="text-gray-600">${roman}</span>
+                                    ${createSpeakButton(korean)}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Double Consonants (된소리)</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            ${[
+                                ['ㄲ', 'kk'], ['ㄸ', 'tt'], ['ㅃ', 'pp'], ['ㅆ', 'ss'], ['ㅉ', 'jj']
+                            ].map(([korean, roman]) => `
+                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                    <span class="text-2xl korean-text font-bold">${korean}</span>
+                                    <span class="text-gray-600">${roman}</span>
+                                    ${createSpeakButton(korean)}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Writing Pattern</h3>
+                        <div class="space-y-4">
+                            <div class="p-4 bg-blue-50 rounded-lg">
+                                <h4 class="font-semibold text-blue-800 mb-2">Syllable Structure</h4>
+                                <p class="text-blue-700 mb-3">Korean characters are written in syllable blocks:</p>
+                                <div class="grid grid-cols-3 gap-4 text-center">
+                                    <div class="p-3 bg-white rounded-lg">
+                                        <div class="text-3xl korean-text font-bold mb-2">가</div>
+                                        <div class="text-sm text-gray-600">ㄱ + ㅏ</div>
+                                        ${createSpeakButton('가')}
+                                    </div>
+                                    <div class="p-3 bg-white rounded-lg">
+                                        <div class="text-3xl korean-text font-bold mb-2">한</div>
+                                        <div class="text-sm text-gray-600">ㅎ + ㅏ + ㄴ</div>
+                                        ${createSpeakButton('한')}
+                                    </div>
+                                    <div class="p-3 bg-white rounded-lg">
+                                        <div class="text-3xl korean-text font-bold mb-2">글</div>
+                                        <div class="text-sm text-gray-600">ㄱ + ㅡ + ㄹ</div>
+                                        ${createSpeakButton('글')}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <button onclick="startQuiz(1)" class="w-full bg-gradient-to-r from-purple-500 to-pink-600 text-white py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all">
+                            Take Quiz 📝
+                        </button>
+                        <button onclick="completeLesson(1); showHome();" class="w-full bg-gradient-to-r from-green-500 to-blue-600 text-white py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all">
+                            Complete Lesson 1
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateLesson2() {
+            return `
+                <div class="space-y-6">
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-4 korean-text">이다 (Ida) - "To Be" Verb</h2>
+                        <p class="text-gray-600 mb-4">The most fundamental verb in Korean, equivalent to "is/am/are" in English.</p>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Basic Forms</h3>
+                        <div class="space-y-4">
+                            <div class="p-4 bg-gray-50 rounded-lg">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-xl korean-text font-bold">이다</span>
+                                    <span class="text-gray-600">to be (dictionary form)</span>
+                                    ${createSpeakButton('이다')}
+                                </div>
+                            </div>
+                            <div class="p-4 bg-gray-50 rounded-lg">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-xl korean-text font-bold">입니다</span>
+                                    <span class="text-gray-600">is/am/are (formal)</span>
+                                    ${createSpeakButton('입니다')}
+                                </div>
+                            </div>
+                            <div class="p-4 bg-gray-50 rounded-lg">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-xl korean-text font-bold">이에요/예요</span>
+                                    <span class="text-gray-600">is/am/are (polite)</span>
+                                    ${createSpeakButton('이에요')}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Usage Rules</h3>
+                        <div class="space-y-4">
+                            <div class="p-4 bg-blue-50 rounded-lg">
+                                <h4 class="font-semibold text-blue-800 mb-2">After consonants: 이다</h4>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between">
+                                        <span class="korean-text">학생이다</span>
+                                        <span class="text-sm text-gray-600">student + is</span>
+                                        ${createSpeakButton('학생이다')}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-4 bg-green-50 rounded-lg">
+                                <h4 class="font-semibold text-green-800 mb-2">After vowels: 다</h4>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between">
+                                        <span class="korean-text">의사다</span>
+                                        <span class="text-sm text-gray-600">doctor + is</span>
+                                        ${createSpeakButton('의사다')}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Example Sentences</h3>
+                        <div class="space-y-4">
+                            ${[
+                                ['저는 학생입니다', 'I am a student'],
+                                ['이것은 책이에요', 'This is a book'],
+                                ['그는 선생님입니다', 'He is a teacher'],
+                                ['날씨가 좋아요', 'The weather is good']
+                            ].map(([korean, english]) => `
+                                <div class="p-4 bg-gray-50 rounded-lg">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="korean-text font-medium">${korean}</span>
+                                        ${createSpeakButton(korean)}
+                                    </div>
+                                    <div class="text-sm text-gray-600">${english}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <button onclick="startQuiz(2)" class="w-full bg-gradient-to-r from-purple-500 to-pink-600 text-white py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all">
+                            Take Quiz 📝
+                        </button>
+                        <button onclick="completeLesson(2); showHome();" class="w-full bg-gradient-to-r from-green-500 to-blue-600 text-white py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all">
+                            Complete Lesson 2
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateLesson3() {
+            return `
+                <div class="space-y-6">
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-4">Korean Numbers</h2>
+                        <p class="text-gray-600 mb-4">Korean has two number systems: Sino-Korean and Native Korean numbers.</p>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Sino-Korean Numbers (한자어 수)</h3>
+                        <p class="text-sm text-gray-600 mb-4">Used for: dates, money, phone numbers, addresses, minutes</p>
+                        <div class="grid grid-cols-2 gap-4">
+                            ${[
+                                ['영/공', '0'], ['일', '1'], ['이', '2'], ['삼', '3'], ['사', '4'],
+                                ['오', '5'], ['육', '6'], ['칠', '7'], ['팔', '8'], ['구', '9'],
+                                ['십', '10'], ['백', '100'], ['천', '1,000'], ['만', '10,000'], ['억', '100,000,000']
+                            ].map(([korean, number]) => `
+                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                    <span class="text-lg korean-text font-bold">${korean}</span>
+                                    <span class="text-gray-600">${number}</span>
+                                    ${createSpeakButton(korean)}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Native Korean Numbers (고유어 수)</h3>
+                        <p class="text-sm text-gray-600 mb-4">Used for: age, hours, counting objects (with counters)</p>
+                        <div class="grid grid-cols-2 gap-4">
+                            ${[
+                                ['하나', '1'], ['둘', '2'], ['셋', '3'], ['넷', '4'], ['다섯', '5'],
+                                ['여섯', '6'], ['일곱', '7'], ['여덟', '8'], ['아홉', '9'], ['열', '10'],
+                                ['스무', '20'], ['서른', '30'], ['마흔', '40'], ['쉰', '50'], ['예순', '60'],
+                                ['일흔', '70'], ['여든', '80'], ['아흔', '90'], ['백', '100']
+                            ].map(([korean, number]) => `
+                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                    <span class="text-lg korean-text font-bold">${korean}</span>
+                                    <span class="text-gray-600">${number}</span>
+                                    ${createSpeakButton(korean)}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">When to Use Which System</h3>
+                        <div class="space-y-4">
+                            <div class="p-4 bg-blue-50 rounded-lg">
+                                <h4 class="font-semibold text-blue-800 mb-2">Sino-Korean Numbers</h4>
+                                <ul class="text-sm text-blue-700 space-y-1">
+                                    <li>• Dates: 2023년 (이천이십삼년)</li>
+                                    <li>• Money: 1000원 (천원)</li>
+                                    <li>• Phone numbers: 010-1234-5678</li>
+                                    <li>• Minutes: 30분 (삼십분)</li>
+                                </ul>
+                            </div>
+                            <div class="p-4 bg-green-50 rounded-lg">
+                                <h4 class="font-semibold text-green-800 mb-2">Native Korean Numbers</h4>
+                                <ul class="text-sm text-green-700 space-y-1">
+                                    <li>• Age: 스무 살 (20 years old)</li>
+                                    <li>• Hours: 세 시 (3 o'clock)</li>
+                                    <li>• Counting objects: 사과 다섯 개 (5 apples)</li>
+                                    <li>• People: 학생 열 명 (10 students)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <button onclick="startQuiz(3)" class="w-full bg-gradient-to-r from-purple-500 to-pink-600 text-white py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all">
+                            Take Quiz 📝
+                        </button>
+                        <button onclick="completeLesson(3); showHome();" class="w-full bg-gradient-to-r from-green-500 to-blue-600 text-white py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all">
+                            Complete Lesson 3
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateLesson4() {
+            return `
+                <div class="space-y-6">
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-4">Telling Time</h2>
+                        <p class="text-gray-600 mb-4">Learn how to express time in Korean using both number systems.</p>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Basic Time Structure</h3>
+                        <div class="p-4 bg-blue-50 rounded-lg mb-4">
+                            <div class="text-center">
+                                <div class="text-2xl korean-text font-bold mb-2">시간 (시) + 분</div>
+                                <div class="text-sm text-gray-600">Hour (Native) + Minutes (Sino)</div>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <h4 class="font-semibold text-gray-800">Hours (Native Korean Numbers + 시)</h4>
+                            <div class="grid grid-cols-2 gap-4">
+                                ${[
+                                    ['한 시', '1:00'], ['두 시', '2:00'], ['세 시', '3:00'], ['네 시', '4:00'],
+                                    ['다섯 시', '5:00'], ['여섯 시', '6:00'], ['일곱 시', '7:00'], ['여덟 시', '8:00'],
+                                    ['아홉 시', '9:00'], ['열 시', '10:00'], ['열한 시', '11:00'], ['열두 시', '12:00']
+                                ].map(([korean, time]) => `
+                                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                        <span class="korean-text font-medium">${korean}</span>
+                                        <span class="text-gray-600">${time}</span>
+                                        ${createSpeakButton(korean)}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Minutes (Sino-Korean Numbers + 분)</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            ${[
+                                ['일 분', '1 minute'], ['오 분', '5 minutes'], ['십 분', '10 minutes'], ['십오 분', '15 minutes'],
+                                ['이십 분', '20 minutes'], ['이십오 분', '25 minutes'], ['삼십 분', '30 minutes'], ['사십오 분', '45 minutes']
+                            ].map(([korean, english]) => `
+                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                    <span class="korean-text font-medium">${korean}</span>
+                                    <span class="text-gray-600">${english}</span>
+                                    ${createSpeakButton(korean)}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Complete Time Examples</h3>
+                        <div class="space-y-4">
+                            ${[
+                                ['세 시 십 분', '3:10'], ['다섯 시 삼십 분', '5:30'], ['아홉 시 사십오 분', '9:45'],
+                                ['열두 시', '12:00 (noon)'], ['열한 시 오십구 분', '11:59']
+                            ].map(([korean, english]) => `
+                                <div class="p-4 bg-gray-50 rounded-lg">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="text-xl korean-text font-bold">${korean}</span>
+                                        ${createSpeakButton(korean)}
+                                    </div>
+                                    <div class="text-sm text-gray-600">${english}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Time Expressions</h3>
+                        <div class="space-y-4">
+                            ${[
+                                ['오전', 'AM (morning)'], ['오후', 'PM (afternoon)'], ['자정', 'midnight'],
+                                ['정오', 'noon'], ['반', 'half (30 minutes)'], ['몇 시예요?', 'What time is it?']
+                            ].map(([korean, english]) => `
+                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                    <span class="korean-text font-medium">${korean}</span>
+                                    <span class="text-gray-600">${english}</span>
+                                    ${createSpeakButton(korean)}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <button onclick="startQuiz(4)" class="w-full bg-gradient-to-r from-purple-500 to-pink-600 text-white py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all">
+                            Take Quiz 📝
+                        </button>
+                        <button onclick="completeLesson(4); showHome();" class="w-full bg-gradient-to-r from-green-500 to-blue-600 text-white py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all">
+                            Complete Lesson 4
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateLesson5() {
+            return `
+                <div class="space-y-6">
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-4">Telling Date</h2>
+                        <p class="text-gray-600 mb-4">Learn how to express dates, days, months, and years in Korean.</p>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Days of the Week</h3>
+                        <div class="space-y-3">
+                            ${[
+                                ['월요일', 'Monday'], ['화요일', 'Tuesday'], ['수요일', 'Wednesday'], 
+                                ['목요일', 'Thursday'], ['금요일', 'Friday'], ['토요일', 'Saturday'], ['일요일', 'Sunday']
+                            ].map(([korean, english]) => `
+                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                    <span class="korean-text font-medium">${korean}</span>
+                                    <span class="text-gray-600">${english}</span>
+                                    ${createSpeakButton(korean)}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Months</h3>
+                        <div class="grid grid-cols-2 gap-3">
+                            ${[
+                                ['일월', 'January'], ['이월', 'February'], ['삼월', 'March'], ['사월', 'April'],
+                                ['오월', 'May'], ['유월', 'June'], ['칠월', 'July'], ['팔월', 'August'],
+                                ['구월', 'September'], ['시월', 'October'], ['십일월', 'November'], ['십이월', 'December']
+                            ].map(([korean, english]) => `
+                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                    <span class="korean-text font-medium">${korean}</span>
+                                    <span class="text-gray-600 text-sm">${english}</span>
+                                    ${createSpeakButton(korean)}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Date Structure</h3>
+                        <div class="p-4 bg-blue-50 rounded-lg mb-4">
+                            <div class="text-center">
+                                <div class="text-xl korean-text font-bold mb-2">년 + 월 + 일</div>
+                                <div class="text-sm text-gray-600">Year + Month + Day</div>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <h4 class="font-semibold text-gray-800">Example Dates</h4>
+                            ${[
+                                ['2023년 12월 25일', 'December 25, 2023'],
+                                ['2024년 1월 1일', 'January 1, 2024'],
+                                ['2023년 7월 15일', 'July 15, 2023']
+                            ].map(([korean, english]) => `
+                                <div class="p-4 bg-gray-50 rounded-lg">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="text-lg korean-text font-bold">${korean}</span>
+                                        ${createSpeakButton(korean)}
+                                    </div>
+                                    <div class="text-sm text-gray-600">${english}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Useful Date Expressions</h3>
+                        <div class="space-y-4">
+                            ${[
+                                ['오늘', 'today'], ['어제', 'yesterday'], ['내일', 'tomorrow'],
+                                ['이번 주', 'this week'], ['다음 주', 'next week'], ['지난 주', 'last week'],
+                                ['이번 달', 'this month'], ['다음 달', 'next month'], ['작년', 'last year'],
+                                ['올해', 'this year'], ['내년', 'next year'], ['며칠이에요?', 'What date is it?']
+                            ].map(([korean, english]) => `
+                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                    <span class="korean-text font-medium">${korean}</span>
+                                    <span class="text-gray-600">${english}</span>
+                                    ${createSpeakButton(korean)}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <button onclick="startQuiz(5)" class="w-full bg-gradient-to-r from-purple-500 to-pink-600 text-white py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all">
+                            Take Quiz 📝
+                        </button>
+                        <button onclick="completeLesson(5); showHome();" class="w-full bg-gradient-to-r from-green-500 to-blue-600 text-white py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all">
+                            Complete Lesson 5
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateLesson6() {
+            return `
+                <div class="space-y-6">
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-4">Korean Counters</h2>
+                        <p class="text-gray-600 mb-4">Korean uses specific counter words to specify the type of object being counted.</p>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Common Counters</h3>
+                        <div class="space-y-4">
+                            ${[
+                                ['개', 'general objects, items'], ['명/사람', 'people'], ['마리', 'animals'],
+                                ['권', 'books'], ['장', 'flat objects (paper, photos)'], ['병', 'bottles'],
+                                ['잔', 'cups, glasses'], ['대', 'machines, vehicles'], ['벌', 'sets of clothing'],
+                                ['송이', 'flowers'], ['그루', 'trees'], ['채', 'houses, buildings']
+                            ].map(([korean, english]) => `
+                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                    <span class="korean-text font-medium">${korean}</span>
+                                    <span class="text-gray-600 text-sm">${english}</span>
+                                    ${createSpeakButton(korean)}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Usage Pattern</h3>
+                        <div class="p-4 bg-blue-50 rounded-lg mb-4">
+                            <div class="text-center">
+                                <div class="text-xl korean-text font-bold mb-2">Noun + Number + Counter</div>
+                                <div class="text-sm text-gray-600">사과 + 다섯 + 개 = 사과 다섯 개</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Examples with Particles</h3>
+                        <div class="space-y-4">
+                            ${[
+                                ['사과 다섯 개를 샀어요', 'I bought 5 apples'],
+                                ['학생 열 명이 왔어요', '10 students came'],
+                                ['강아지 두 마리가 있어요', 'There are 2 puppies'],
+                                ['책 세 권을 읽었어요', 'I read 3 books'],
+                                ['물 한 잔 주세요', 'Please give me a glass of water'],
+                                ['차 한 대를 샀어요', 'I bought a car']
+                            ].map(([korean, english]) => `
+                                <div class="p-4 bg-gray-50 rounded-lg">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="korean-text font-medium">${korean}</span>
+                                        ${createSpeakButton(korean)}
+                                    </div>
+                                    <div class="text-sm text-gray-600">${english}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Number Changes with Counters</h3>
+                        <div class="p-4 bg-yellow-50 rounded-lg">
+                            <h4 class="font-semibold text-yellow-800 mb-2">Native numbers change before counters:</h4>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex justify-between">
+                                    <span class="korean-text">하나 → 한 개</span>
+                                    <span class="text-gray-600">one item</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="korean-text">둘 → 두 개</span>
+                                    <span class="text-gray-600">two items</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="korean-text">셋 → 세 개</span>
+                                    <span class="text-gray-600">three items</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="korean-text">넷 → 네 개</span>
+                                    <span class="text-gray-600">four items</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <button onclick="startQuiz(6)" class="w-full bg-gradient-to-r from-purple-500 to-pink-600 text-white py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all">
+                            Take Quiz 📝
+                        </button>
+                        <button onclick="completeLesson(6); showHome();" class="w-full bg-gradient-to-r from-green-500 to-blue-600 text-white py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all">
+                            Complete Lesson 6
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateLesson7() {
+            return `
+                <div class="space-y-6">
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-4">Verb & Adjective Conjugation</h2>
+                        <p class="text-gray-600 mb-4">Brief overview of Korean verb and adjective conjugation patterns (Lessons 7-12).</p>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Basic Verb Forms</h3>
+                        <div class="space-y-4">
+                            <div class="p-4 bg-blue-50 rounded-lg">
+                                <h4 class="font-semibold text-blue-800 mb-2">Present Tense (현재형)</h4>
+                                <div class="space-y-2">
+                                    ${[
+                                        ['가다 → 가요', 'go → goes'], ['먹다 → 먹어요', 'eat → eats'],
+                                        ['보다 → 봐요', 'see → sees'], ['하다 → 해요', 'do → does']
+                                    ].map(([korean, english]) => `
+                                        <div class="flex items-center justify-between">
+                                            <span class="korean-text">${korean}</span>
+                                            <span class="text-sm text-gray-600">${english}</span>
+                                            ${createSpeakButton(korean.split(' → ')[1])}
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+
+                            <div class="p-4 bg-green-50 rounded-lg">
+                                <h4 class="font-semibold text-green-800 mb-2">Past Tense (과거형)</h4>
+                                <div class="space-y-2">
+                                    ${[
+                                        ['가다 → 갔어요', 'go → went'], ['먹다 → 먹었어요', 'eat → ate'],
+                                        ['보다 → 봤어요', 'see → saw'], ['하다 → 했어요', 'do → did']
+                                    ].map(([korean, english]) => `
+                                        <div class="flex items-center justify-between">
+                                            <span class="korean-text">${korean}</span>
+                                            <span class="text-sm text-gray-600">${english}</span>
+                                            ${createSpeakButton(korean.split(' → ')[1])}
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+
+                            <div class="p-4 bg-purple-50 rounded-lg">
+                                <h4 class="font-semibold text-purple-800 mb-2">Future Tense (미래형)</h4>
+                                <div class="space-y-2">
+                                    ${[
+                                        ['가다 → 갈 거예요', 'go → will go'], ['먹다 → 먹을 거예요', 'eat → will eat'],
+                                        ['보다 → 볼 거예요', 'see → will see'], ['하다 → 할 거예요', 'do → will do']
+                                    ].map(([korean, english]) => `
+                                        <div class="flex items-center justify-between">
+                                            <span class="korean-text">${korean}</span>
+                                            <span class="text-sm text-gray-600">${english}</span>
+                                            ${createSpeakButton(korean.split(' → ')[1])}
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Adjective Conjugation</h3>
+                        <div class="space-y-4">
+                            ${[
+                                ['크다 → 커요', 'big → is big'], ['작다 → 작아요', 'small → is small'],
+                                ['좋다 → 좋아요', 'good → is good'], ['나쁘다 → 나빠요', 'bad → is bad'],
+                                ['예쁘다 → 예뻐요', 'pretty → is pretty'], ['맛있다 → 맛있어요', 'delicious → is delicious']
+                            ].map(([korean, english]) => `
+                                <div class="p-3 bg-gray-50 rounded-lg">
+                                    <div class="flex items-center justify-between">
+                                        <span class="korean-text font-medium">${korean}</span>
+                                        <span class="text-sm text-gray-600">${english}</span>
+                                        ${createSpeakButton(korean.split(' → ')[1])}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Politeness Levels</h3>
+                        <div class="space-y-4">
+                            <div class="p-4 bg-yellow-50 rounded-lg">
+                                <h4 class="font-semibold text-yellow-800 mb-2">Formal (합니다체)</h4>
+                                <div class="korean-text">가다 → 갑니다 (I go)</div>
+                            </div>
+                            <div class="p-4 bg-orange-50 rounded-lg">
+                                <h4 class="font-semibold text-orange-800 mb-2">Polite (해요체)</h4>
+                                <div class="korean-text">가다 → 가요 (I go)</div>
+                            </div>
+                            <div class="p-4 bg-red-50 rounded-lg">
+                                <h4 class="font-semibold text-red-800 mb-2">Casual (해체)</h4>
+                                <div class="korean-text">가다 → 가 (I go)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <button onclick="startQuiz(7)" class="w-full bg-gradient-to-r from-purple-500 to-pink-600 text-white py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all">
+                            Take Quiz 📝
+                        </button>
+                        <button onclick="completeLesson(7); showHome();" class="w-full bg-gradient-to-r from-green-500 to-blue-600 text-white py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all">
+                            Complete Lessons 7-12
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateLesson13() {
+            return `
+                <div class="space-y-6">
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-4">Location & Direction</h2>
+                        <p class="text-gray-600 mb-4">Learn how to express location and direction using Korean particles (Lessons 13-14).</p>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Location Particles</h3>
+                        <div class="space-y-4">
+                            ${[
+                                ['에', 'at, in, on (static location)'], ['에서', 'at, in (action location)'],
+                                ['으로/로', 'to, toward (direction)'], ['부터', 'from (starting point)'],
+                                ['까지', 'to, until (ending point)'], ['앞에', 'in front of'],
+                                ['뒤에', 'behind'], ['위에', 'on top of'], ['아래에', 'under'],
+                                ['옆에', 'next to'], ['사이에', 'between'], ['안에', 'inside']
+                            ].map(([korean, english]) => `
+                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                    <span class="korean-text font-medium">${korean}</span>
+                                    <span class="text-gray-600 text-sm">${english}</span>
+                                    ${createSpeakButton(korean)}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Location Examples</h3>
+                        <div class="space-y-4">
+                            ${[
+                                ['학교에 있어요', 'I am at school'], ['도서관에서 공부해요', 'I study at the library'],
+                                ['집으로 가요', 'I go home'], ['서울부터 부산까지', 'from Seoul to Busan'],
+                                ['책상 위에 책이 있어요', 'There is a book on the desk'],
+                                ['의자 아래에 고양이가 있어요', 'There is a cat under the chair']
+                            ].map(([korean, english]) => `
+                                <div class="p-4 bg-gray-50 rounded-lg">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="korean-text font-medium">${korean}</span>
+                                        ${createSpeakButton(korean)}
+                                    </div>
+                                    <div class="text-sm text-gray-600">${english}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Direction Words</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            ${[
+                                ['동쪽', 'east'], ['서쪽', 'west'], ['남쪽', 'south'], ['북쪽', 'north'],
+                                ['왼쪽', 'left'], ['오른쪽', 'right'], ['앞', 'front'], ['뒤', 'back'],
+                                ['위', 'up'], ['아래', 'down'], ['직진', 'straight'], ['돌아서', 'turn around']
+                            ].map(([korean, english]) => `
+                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                    <span class="korean-text font-medium">${korean}</span>
+                                    <span class="text-gray-600 text-sm">${english}</span>
+                                    ${createSpeakButton(korean)}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Asking for Directions</h3>
+                        <div class="space-y-4">
+                            ${[
+                                ['어디에 있어요?', 'Where is it?'], ['어떻게 가요?', 'How do I get there?'],
+                                ['길을 잃었어요', 'I am lost'], ['지도를 보여 주세요', 'Please show me the map'],
+                                ['여기서 멀어요?', 'Is it far from here?'], ['걸어서 갈 수 있어요?', 'Can I walk there?']
+                            ].map(([korean, english]) => `
+                                <div class="p-4 bg-gray-50 rounded-lg">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="korean-text font-medium">${korean}</span>
+                                        ${createSpeakButton(korean)}
+                                    </div>
+                                    <div class="text-sm text-gray-600">${english}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <button onclick="startQuiz(13)" class="w-full bg-gradient-to-r from-purple-500 to-pink-600 text-white py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all">
+                            Take Quiz 📝
+                        </button>
+                        <button onclick="completeLesson(13); showHome();" class="w-full bg-gradient-to-r from-green-500 to-blue-600 text-white py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all">
+                            Complete Lessons 13-14
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateLesson15() {
+            return `
+                <div class="space-y-6">
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-4">Basic Sentence Structure</h2>
+                        <p class="text-gray-600 mb-4">Learn Korean word order, particles, and basic sentence patterns.</p>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Korean Word Order: SOV</h3>
+                        <div class="p-4 bg-blue-50 rounded-lg mb-4">
+                            <div class="text-center">
+                                <div class="text-xl korean-text font-bold mb-2">Subject + Object + Verb</div>
+                                <div class="text-lg korean-text mb-2">나는 + 사과를 + 먹어요</div>
+                                <div class="text-sm text-gray-600">I + apple + eat = I eat an apple</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Essential Particles</h3>
+                        <div class="space-y-4">
+                            <div class="p-4 bg-green-50 rounded-lg">
+                                <h4 class="font-semibold text-green-800 mb-2">Subject Particles</h4>
+                                <div class="space-y-2">
+                                    <div class="flex justify-between">
+                                        <span class="korean-text">이/가</span>
+                                        <span class="text-sm text-gray-600">subject marker</span>
+                                    </div>
+                                    <div class="text-sm text-gray-600">학생이 와요 (A student comes)</div>
+                                </div>
+                            </div>
+
+                            <div class="p-4 bg-yellow-50 rounded-lg">
+                                <h4 class="font-semibold text-yellow-800 mb-2">Object Particles</h4>
+                                <div class="space-y-2">
+                                    <div class="flex justify-between">
+                                        <span class="korean-text">을/를</span>
+                                        <span class="text-sm text-gray-600">object marker</span>
+                                    </div>
+                                    <div class="text-sm text-gray-600">책을 읽어요 (I read a book)</div>
+                                </div>
+                            </div>
+
+                            <div class="p-4 bg-purple-50 rounded-lg">
+                                <h4 class="font-semibold text-purple-800 mb-2">Topic Particles</h4>
+                                <div class="space-y-2">
+                                    <div class="flex justify-between">
+                                        <span class="korean-text">은/는</span>
+                                        <span class="text-sm text-gray-600">topic marker</span>
+                                    </div>
+                                    <div class="text-sm text-gray-600">저는 학생이에요 (As for me, I am a student)</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Basic Sentence Patterns</h3>
+                        <div class="space-y-4">
+                            ${[
+                                ['A는 B예요', 'A is B'], ['A가 있어요/없어요', 'There is/isn\'t A'],
+                                ['A를 좋아해요', 'I like A'], ['A에서 B를 해요', 'I do B at A'],
+                                ['A는 B보다 커요', 'A is bigger than B'], ['A하고 B', 'A and B']
+                            ].map(([korean, english]) => `
+                                <div class="p-4 bg-gray-50 rounded-lg">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="korean-text font-medium">${korean}</span>
+                                        ${createSpeakButton(korean)}
+                                    </div>
+                                    <div class="text-sm text-gray-600">${english}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Complete Example Sentences</h3>
+                        <div class="space-y-4">
+                            ${[
+                                ['저는 한국 사람이에요', 'I am Korean'], ['친구가 학교에 와요', 'My friend comes to school'],
+                                ['어머니는 요리를 잘해요', 'My mother cooks well'], ['우리는 영화를 봤어요', 'We watched a movie'],
+                                ['이 책이 그 책보다 재미있어요', 'This book is more interesting than that book'],
+                                ['커피하고 케이크를 주문했어요', 'I ordered coffee and cake']
+                            ].map(([korean, english]) => `
+                                <div class="p-4 bg-gray-50 rounded-lg">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="korean-text font-medium">${korean}</span>
+                                        ${createSpeakButton(korean)}
+                                    </div>
+                                    <div class="text-sm text-gray-600">${english}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Question Formation</h3>
+                        <div class="space-y-4">
+                            ${[
+                                ['뭐예요?', 'What is it?'], ['누구예요?', 'Who is it?'], ['어디예요?', 'Where is it?'],
+                                ['언제예요?', 'When is it?'], ['왜요?', 'Why?'], ['어떻게요?', 'How?'],
+                                ['얼마예요?', 'How much?'], ['몇 개예요?', 'How many?']
+                            ].map(([korean, english]) => `
+                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                    <span class="korean-text font-medium">${korean}</span>
+                                    <span class="text-gray-600 text-sm">${english}</span>
+                                    ${createSpeakButton(korean)}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <button onclick="startQuiz(15)" class="w-full bg-gradient-to-r from-purple-500 to-pink-600 text-white py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all">
+                            Take Quiz 📝
+                        </button>
+                        <button onclick="completeLesson(15); showHome();" class="w-full bg-gradient-to-r from-green-500 to-blue-600 text-white py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all">
+                            Complete Lesson 15
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Open lesson function
+        function openLesson(lessonNum) {
+            currentLesson = lessonNum;
+            showLesson();
+            
+            let content = '';
+            switch(lessonNum) {
+                case 1: content = generateLesson1(); break;
+                case 2: content = generateLesson2(); break;
+                case 3: content = generateLesson3(); break;
+                case 4: content = generateLesson4(); break;
+                case 5: content = generateLesson5(); break;
+                case 6: content = generateLesson6(); break;
+                case 7: content = generateLesson7(); break;
+                case 13: content = generateLesson13(); break;
+                case 15: content = generateLesson15(); break;
+                default: content = '<div class="text-center p-8"><h2 class="text-xl font-bold text-gray-800">Lesson Coming Soon!</h2><p class="text-gray-600 mt-2">This lesson is under development.</p></div>';
+            }
+            
+            document.getElementById('lessonContent').innerHTML = content;
+        }
+
+        // Event listeners
+        document.getElementById('backBtn').addEventListener('click', showHome);
+
+        // Initialize app
+        updateProgress();
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97ca4e13e5b03231',t:'MTc1NzQ1ODg2MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
