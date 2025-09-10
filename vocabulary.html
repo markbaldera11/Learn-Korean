@@ -30,11 +30,43 @@
             }
         }
     </script>
+    <style>
+        .bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .gradient-border::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+        
+        .logo-gradient {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+        
+        .btn-gradient {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+        
+        .welcome-gradient {
+            background: linear-gradient(135deg, #f8f9ff, #e8ecff);
+        }
+    </style>
 </head>
-<body class="bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700 min-h-screen flex items-center justify-center py-6">
+
+<body class="gradient-bg min-h-screen flex items-center justify-center py-6">
     <div class="container mx-auto px-4 py-6 max-w-md h-full flex flex-col">
-        <div class="bg-gradient-to-r from-pink-500 to-rose-500 rounded-t-3xl text-white p-8 text-center shadow-xl">
-            <h1 class="text-2xl font-bold mb-2">🇰🇷 Korean Vocabulary</h1>
+        
+        <div class="bg rounded-t-3xl text-white p-8 text-center shadow-xl">
+            <a href="index.html">
+                ⬅ Back
+            </a>
+            <h1  class="text-2xl font-bold mb-2">Korean Vocabulary</h1>
             <p class="text-pink-100 text-sm">Learn Korean words by category</p>
         </div>
 
